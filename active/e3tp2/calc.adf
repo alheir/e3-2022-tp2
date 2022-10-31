@@ -1,0 +1,34 @@
+[Project]
+Current Flow=Generic
+VCS=0
+version=4
+Current Config=compile
+[Configurations]
+compile=calc
+[Library]
+calc=.\calc\calc.lib
+[$LibMap$]
+calc=.
+Active_lib=
+[Settings]
+FLOW_TYPE=HDL
+LANGUAGE=VERILOG
+REFRESH_FLOW=1
+FLOWTOOLS=NONE
+FAMILY=Lattice iCE40UP
+[Files]
+/alu.v=-1
+/display.v=-1
+/fsm.v=-1
+/keyboard.v=-1
+/calc.v=-1
+[Files.Data]
+.\src\alu.v=Verilog Source Code
+.\src\display.v=Verilog Source Code
+.\src\fsm.v=Verilog Source Code
+.\src\keyboard.v=Verilog Source Code
+.\src\calc.v=Verilog Source Code
+[HierarchyViewer]
+HierarchyInformation=
+ShowHide=ShowTopLevel
+Selected=

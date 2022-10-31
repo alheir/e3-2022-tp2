@@ -1,0 +1,5 @@
+i<>.\src\alu.v
+i<>.\src\display.v
+i<>.\src\fsm.v
+i<>.\src\keyboard.v
+i<>.\src\calc.v
