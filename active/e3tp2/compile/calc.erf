@@ -2,9 +2,9 @@ MESSAGE "Pass 1. Scanning modules hierarchy."
 MESSAGE_SP VCP2113 "Module \$root found in current working library."
 BEGINPROGRESS Compiling...
 UPDATEPROGRESS 35
-MESSAGE_SP VCP2113 "Module \\4-Bit_Adder found in current working library."
+MESSAGE_SP VCP2113 "Module spi_master found in current working library."
+MESSAGE_SP VCP2113 "Module counter found in current working library."
 MESSAGE "Pass 2. Processing instantiations."
-MESSAGE_SP VCP2876 "Implicit net declaration, symbol open has not been declared in module BCD_Subtractor." "C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_Subtractor.v" 40  29
 UPDATEPROGRESS 45
 MESSAGE "Pass 3. Processing behavioral statements."
 UPDATEPROGRESS 80
@@ -18,7 +18,8 @@ UPDATEPROGRESS 91
 UPDATEPROGRESS 94
 UPDATEPROGRESS 97
 UPDATEPROGRESS 100
-MESSAGE "$root top modules: fsm alu calc ALU."
+MESSAGE "Unit top modules: max7219."
+MESSAGE "$root top modules: fsm alu calc ALU max7219."
 ENDPROGRESS Compiling...
 SUCCESS "Compile success 0 Errors 0 Warnings  Analysis time: 0[s]."
 WARNING ALOG: "The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available."

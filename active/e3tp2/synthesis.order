@@ -9,3 +9,6 @@ i<>.\src\BCD_4_Bit_Adder.v
 i<>.\src\Full_Adder.v
 i<>.\src\BCD_Adder.v
 i<>.\src\BCD_Subtractor.v
+i<>.\src\Max7219.v
+i<>.\src\spi_master.v
+i<>.\src\counter.v

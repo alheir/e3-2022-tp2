@@ -9,3 +9,6 @@
 .\src\Full_Adder.v
 .\src\BCD_Adder.v
 .\src\BCD_Subtractor.v
+.\src\Max7219.v
+.\src\spi_master.v
+.\src\counter.v

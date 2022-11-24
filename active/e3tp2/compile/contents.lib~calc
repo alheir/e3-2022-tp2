@@ -1,4 +1,4 @@
-41
+50
 ~M 0 "" 0 $root
 ~A 1 "" 0 $root
 ~M 3 "../src/alu.v" 25 ALU
@@ -19,9 +19,15 @@
 ~A 1 "../src/alu.v" 25 alu
 ~M 3 "../src/calc.v" 25 calc
 ~A 1 "../src/calc.v" 25 calc
+~M 1 "../src/counter.v" 8 counter
+~A 1 "../src/counter.v" 8 counter
 ~M 1 "../src/display.v" 26 display
 ~A 1 "../src/display.v" 26 display
 ~M 3 "../src/fsm.v" 25 fsm
 ~A 1 "../src/fsm.v" 25 fsm
 ~M 1 "../src/keyboard.v" 25 keyboard
 ~A 1 "../src/keyboard.v" 25 keyboard
+~M 3 "../src/Max7219.v" 1 max7219
+~A 1 "../src/Max7219.v" 1 max7219
+~M 1 "../src/spi_master.v" 7 spi_master
+~A 1 "../src/spi_master.v" 7 spi_master
