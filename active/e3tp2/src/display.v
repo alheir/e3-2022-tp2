@@ -43,6 +43,6 @@ always @ (posedge clock)
 		ENL = 0;
 
 num_mod num (ENM && ENL, num, dp, clock, reset);
-codes-mod codes (!ENM && ENL, codes, clock, reset);
+codes_mod codes (~ENM && ENL, codes, clock, reset);
 
 endmodule

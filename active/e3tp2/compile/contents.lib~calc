@@ -1,6 +1,12 @@
-3
+5
 ~M 0 "" 0 $root
 ~A 1 "" 0 $root
+~M 3 "../src/alu.v" 25 alu
+~A 1 "../src/alu.v" 25 alu
+~M 3 "../src/calc.v" 25 calc
+~A 1 "../src/calc.v" 25 calc
+~M 1 "../src/display.v" 26 display
+~A 1 "../src/display.v" 26 display
 ~M 3 "../src/fsm.v" 25 fsm
 ~A 1 "../src/fsm.v" 25 fsm
 ~M 1 "../src/keyboard.v" 25 keyboard

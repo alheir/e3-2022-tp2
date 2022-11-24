@@ -19,14 +19,14 @@ FAMILY=Lattice iCE40UP
 [Files]
 /alu.v=-1
 /display.v=-1
-/fsm.v=-1
 /keyboard.v=-1
+/fsm.v=-1
 /calc.v=-1
 [Files.Data]
 .\src\alu.v=Verilog Source Code
 .\src\display.v=Verilog Source Code
-.\src\fsm.v=Verilog Source Code
 .\src\keyboard.v=Verilog Source Code
+.\src\fsm.v=Verilog Source Code
 .\src\calc.v=Verilog Source Code
 [HierarchyViewer]
 HierarchyInformation=
