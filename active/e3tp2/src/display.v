@@ -60,6 +60,21 @@ always @ (posedge clk)
 	end
 
 num_mod num_mod (EN_num, num, dp, clk, rst);
-code_mod code_mod (EN_code, code, clk, rst);
+code_mod code_mod (EN = EN_code, code = code, clk = clk, rst = rst);
 
 endmodule
+
+module code_mod (
+	input EN,
+	input code,
+	input clk,
+	input rst);
+
+parameter	BRIGHT_1 = 0,
+			BRIGHT_2 = 1,
+			BRIGHT_3 = 2,
+			BRIGHT_4 = 3,
+			HOLA = 4,
+			CHAU = 5;
+			
+endmoduleSßß
