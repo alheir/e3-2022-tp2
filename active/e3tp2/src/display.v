@@ -24,25 +24,57 @@
 //{module {display}}
 
 module display (
-	input clock,
-    input reset,
-	input latch, //to read or not to read, that is the question?
+	input clk,
+    input rst,
     input mode,  // 0: numbers, 1: codes
     input [2:0] dp,  // 111 -> DP en el MSD | 000 -> DP en el LSD
-    input [3:0] codes, // C�digos hardcodados a definir. Para printear o hacer cosas ya definidas dentro�del�m�dulo	
+    input [3:0] code, // C�digos hardcodados a definir. Para printear o hacer cosas ya definidas dentro�del�m�dulo	
 	input [31:0] num
 	);	 
 
-reg ENM = 0;
-reg ENL = 1;
+reg EN_num = 0;
+reg EN_code = 0;
+reg [3:0] code_reg = 0;
+reg	[31:0] num_reg = 0;
 	
-always @ (posedge clock)
-	if (latch)
-		if (!mode)	ENM = 1;
-	else
-		ENL = 0;
+always @ (posedge clk)
+	begin
+		if (mode)
+			begin
+				if (num_reg == num)	EN_num = 0;
+				else
+					begin
+						EN_num = 1;
+						num_reg = num;
+					end
+			end
+		else
+			begin
+				if (code_reg == code) EN_code = 0;
+				else 
+					begin
+						EN_code = 1;
+						code_reg = code;
+					end
+			end
+	end
 
-num_mod num (ENM && ENL, num, dp, clock, reset);
-codes_mod codes (~ENM && ENL, codes, clock, reset);
+num_mod num_mod (EN_num, num, dp, clk, rst);
+code_mod code_mod (EN = EN_code, code = code, clk = clk, rst = rst);
 
+endmodule
+
+module code_mod (
+	input EN,
+	input code,
+	input clk,
+	input rst);
+
+parameter	BRIGHT_1 = 0,
+			BRIGHT_2 = 1,
+			BRIGHT_3 = 2,
+			BRIGHT_4 = 3,
+			HOLA = 4,
+			CHAU = 5;
+			
 endmodule
