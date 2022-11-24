@@ -9665,15 +9665,15 @@
         "src": "top.v:1.1-333.10"
       },
       "ports": {
-        "gpio_25": {
+        "gpio_47": {
           "direction": "output",
           "bits": [ "0" ]
         },
-        "gpio_27": {
+        "gpio_2": {
           "direction": "output",
           "bits": [ "0" ]
         },
-        "gpio_26": {
+        "gpio_46": {
           "direction": "output",
           "bits": [ "0" ]
         }
@@ -9723,25 +9723,25 @@
             "src": "top.v:16.15-16.17"
           }
         },
-        "gpio_25": {
+        "gpio_2": {
           "hide_name": 0,
           "bits": [ "0" ],
           "attributes": {
-            "src": "top.v:9.16-9.23"
+            "src": "top.v:10.16-10.22"
           }
         },
-        "gpio_26": {
+        "gpio_46": {
           "hide_name": 0,
           "bits": [ "0" ],
           "attributes": {
             "src": "top.v:11.16-11.23"
           }
         },
-        "gpio_27": {
+        "gpio_47": {
           "hide_name": 0,
           "bits": [ "0" ],
           "attributes": {
-            "src": "top.v:10.16-10.23"
+            "src": "top.v:9.16-9.23"
           }
         },
         "max.M_addr_q": {

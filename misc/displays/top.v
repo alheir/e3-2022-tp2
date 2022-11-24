@@ -9,9 +9,11 @@ module top (
     output reg gpio_36,
     output reg gpio_42,
     output reg gpio_34,
-    output wire gpio_37,
+    output reg gpio_37,
     input wire gpio_26
 );
+
+    reg [31:0] digits = 32'h12345678;   
 
     wire clk;
 
@@ -32,8 +34,6 @@ module top (
     reg [7:0] M_max_addr_in;
     reg [7:0] M_max_din;
     reg M_max_start;
-
-     assign gpio37 = !gpio_26;
 
     // Se instancia el max7129
     max7219 max (
@@ -124,7 +124,7 @@ module top (
             SEND_MAX_INTENSITY_state: begin
                 M_max_start = 1'h1;
                 max_addr = 8'h0a;
-                max_data = 8'h04;
+                max_data = 8'h00;
                 if (M_max_busy != 1'h1) begin
                     M_state_d = SEND_NO_DECODE_state;
                 end
@@ -132,7 +132,7 @@ module top (
             SEND_NO_DECODE_state: begin
                 M_max_start = 1'h1;
                 max_addr = 8'h09;
-                max_data = 1'h0;
+                max_data = 8'hff;
                 if (M_max_busy != 1'h1) begin
                     M_state_d = SEND_ALL_DIGITS_state;
                 end
@@ -149,7 +149,8 @@ module top (
                 if (M_segment_index_q < 4'h8) begin
                     M_max_start = 1'h1;
                     max_addr = M_segment_index_q + 1'h1;
-                    max_data = M_segments_q[(M_segment_index_q)*8+7-:8];
+                    // max_data = M_segments_q[(M_segment_index_q)*8+7-:8];
+                    max_data = digits[(M_segment_index_q)*4+3-:4];
                     if (M_max_busy != 1'h1) begin
                         M_segment_index_d = M_segment_index_q + 1'h1;
                     end
@@ -159,7 +160,7 @@ module top (
                 end
             end
             HALT_state: begin
-                M_max_start = 1'h1;
+                
                 max_addr = 8'h00;
                 max_data = 8'h00;
                 // if (M_max_busy != 1'h1) begin
