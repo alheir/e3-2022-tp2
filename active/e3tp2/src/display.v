@@ -26,23 +26,40 @@
 module display (
 	input clk,
     input rst,
-	input latch, //to read or not to read, that is the question?
     input mode,  // 0: numbers, 1: codes
     input [2:0] dp,  // 111 -> DP en el MSD | 000 -> DP en el LSD
-    input [3:0] codes, // Códigos hardcodados a definir. Para printear o hacer cosas ya definidas dentro del módulo	
+    input [3:0] code, // Códigos hardcodados a definir. Para printear o hacer cosas ya definidas dentro del módulo	
 	input [31:0] num
 	);	 
 
-reg ENM = 0;
-reg ENL = 1;
+reg EN_num = 0;
+reg EN_code = 0;
+reg [3:0] code_reg = 0;
+reg	[31:0] num_reg = 0;
 	
 always @ (posedge clk)
-	if (latch)
-		if (!mode)	ENM = 1;
-	else
-		ENL = 0;
+	begin
+		if (mode)
+			begin
+				if (num_reg == num)	EN_num = 0;
+				else
+					begin
+						EN_num = 1;
+						num_reg = num;
+					end
+			end
+		else
+			begin
+				if (code_reg == code) EN_code = 0;
+				else 
+					begin
+						EN_code = 1;
+						code_reg = code;
+					end
+			end
+	end
 
-num_mod num (ENM && ENL, num, dp, clk, rst);
-codes-mod codes (!ENM && ENL, codes, clk, rst);
+num_mod num_mod (EN_num, num, dp, clk, rst);
+code_mod code_mod (EN_code, code, clk, rst);
 
 endmodule
