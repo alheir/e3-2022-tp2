@@ -1,1 +1,7 @@
-0
+3
+~M 0 "" 0 $root
+~A 1 "" 0 $root
+~M 3 "../src/fsm.v" 25 fsm
+~A 1 "../src/fsm.v" 25 fsm
+~M 1 "../src/keyboard.v" 25 keyboard
+~A 1 "../src/keyboard.v" 25 keyboard

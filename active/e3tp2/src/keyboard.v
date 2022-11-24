@@ -77,7 +77,7 @@ always @ (posedge clock)
 	if(reset)
 		col_selector <= 2'b00;
 	else
-		col_selector <= col_selector + 1;
+		col_selector <= col_selector + 1; // rota columnas
 	
 always @ (posedge clock)
 	if(!reset) begin
@@ -117,5 +117,7 @@ always @ (posedge clock)
 			endcase
 		end
 	end
+
+assign keytype = key <= NINE_VAL;
 
 endmodule

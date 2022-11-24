@@ -38,17 +38,15 @@ reg last_clock_keyrx;
 
 wire [1:0] row_result;																  
 wire valid_out;
-wire row_result;
-wire valid_out;
 wire symbol_signal;
 wire number_signal;
 wire keytype;
 wire [3:0] key;
 wire [1:0] col_selector;		
 
-reg [DIGIT_NUM*4:0] operand0;
+reg [DIGIT_NUM*4-1:0] operand0;
 reg operand0_sign;
-reg [DIGIT_NUM*4:0] operand1;	
+reg [DIGIT_NUM*4-1:0] operand1;	
 reg operand1_sign;
 reg [2:0] operation;
 reg [3:0] brightness;
@@ -84,6 +82,22 @@ keyboard keyboardMod(
 	.col_selector(col_selector)
 );
 
+reg disp_latch;
+reg [2:0] dp_pos;
+reg [3:0] disp_codes;
+reg [DIGIT_NUM*4-1:0] disp_num;
+
+display displayMod (
+	.clock(clock),
+    .reset(reset),
+	.latch(disp_latch), //to read or not to read, that is the question?
+    .mode(disp_mode),  // 0: numbers, 1: codes
+    .dp(dp_pos),  // 111 -> DP en el MSD | 000 -> DP en el LSD
+    .codes(disp_codes), // Cï¿½digos hardcodados a definir. Para printear o hacer cosas ya definidas dentroï¿½delï¿½mï¿½dulo	
+	.num(disp_num)
+);	 
+
+
 // alu aluMod();
 
 always @ (posedge clock)
@@ -98,7 +112,7 @@ always @ (posedge clock)
 		brightness <= 0;
 	end
 	else begin
-		if(~last_clock_keyrx and valid_out) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
+		if(~last_clock_keyrx && valid_out) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
 			last_clock_keyrx <= 1;
 			if(keytype == NUMBER) begin // se recibio un numero
 				case(curr_sta)
@@ -119,10 +133,10 @@ always @ (posedge clock)
 			else begin
 				if(key == FN_BUT) begin
 					case(curr_sta)
-						LOADING_OP_0: curr_sta => ALT_INPUT_OP0;
-						LOADING_OP_1: curr_sta => ALT_INPUT_OP1;
-						ALT_INPUT_OP0: curr_sta => LOADING_OP_0;
-						ALT_INPUT_OP1: curr_sta => LOADING_OP_1;
+						LOADING_OP_0: curr_sta <= ALT_INPUT_OP0;
+						LOADING_OP_1: curr_sta <= ALT_INPUT_OP1;
+						ALT_INPUT_OP0: curr_sta <= LOADING_OP_0;
+						ALT_INPUT_OP1: curr_sta <= LOADING_OP_1;
 					endcase
 				end
 				else if(key == NUMERAL_BUT) begin
@@ -135,9 +149,10 @@ always @ (posedge clock)
 							if(curr_sta == LOADING_OP_0) begin
 								if(operand0 != 0) begin
 									operation <= SUM_OP; // suma
-									curr_sta => LOADING_OP_1;
+									curr_sta <= LOADING_OP_1;
 								end
 								else operand0_sign <= ~operand0_sign;
+								// MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
 							end
 							else if(curr_sta == LOADING_OP_1) begin
 								if(operand1 != 0) begin
@@ -146,13 +161,14 @@ always @ (posedge clock)
 									operand1_sign <= 0;
 								end
 								else operand1_sign <= ~operand1_sign;
+								// MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
 							end
 						end
 						B_BUT: begin
 							if(curr_sta == LOADING_OP_0) begin
 								if(operand0 != 0) begin
 									operation <= SUB_OP; // resta
-									curr_sta => LOADING_OP_1;
+									curr_sta <= LOADING_OP_1;
 								end
 								else operand0_sign <= ~operand0_sign;
 							end
@@ -163,6 +179,7 @@ always @ (posedge clock)
 									operand1_sign <= 0;
 								end
 								else operand1_sign <= ~operand1_sign;
+								// MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
 							end
 						end
 						C_BUT: begin // Clear
@@ -177,9 +194,9 @@ always @ (posedge clock)
 								operand1 <= 0;
 								operand1_sign <= 0;
 								// obtener resultado operando, poner en op0
-								curr_sta => LOADING_OP_0;
+								curr_sta <= LOADING_OP_0;
 							end
-						end;
+						end
 					endcase
 				end
 			end
@@ -187,7 +204,5 @@ always @ (posedge clock)
 		else if(~valid_out)
 			last_clock_keyrx <= 0;
 	end												
-
-
-
+assign disp_num = (curr_sta == LOADING_OP_1) ? operand1 : ((curr_sta == LOADING_OP_0) ? operand0 : 0);
 endmodule
