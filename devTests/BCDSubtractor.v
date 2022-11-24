@@ -1,35 +1,13 @@
-//-----------------------------------------------------------------------------
-//
-// Title       : BCD_Subtractor
-// Design      : BCD_Adder
-// Author      : fagrippino
-// Company     : ITBA
-//
-//-----------------------------------------------------------------------------
-//
-// File        : c:\My_Designs\TP2_ALU\BCD_Adder\src\BCD_Subtractor.v
-// Generated   : Sun Oct 30 16:43:03 2022
-// From        : interface description file
-// By          : Itf2Vhdl ver. 1.22
-//
-//-----------------------------------------------------------------------------
-//
-// Description : 
-//
-//-----------------------------------------------------------------------------
 `timescale 1 ns / 1 ps
 
-//{{ Section below this comment is automatically maintained
-//   and may be overwritten
-//{module {BCD_Subtractor}}
+//Inicio de Modulo
+
 module BCDSubtractor (
 	input wire [3:0] A,
 	input wire [3:0] B,
-	input wire Cin,
 	output wire [3:0] S,
 	output wire Cout
 );
-
 
 /*	Variables	*/
 wire [3:0]A0;
@@ -87,13 +65,16 @@ FourBitAdder Ad2 (.A (A2),
 				 //Cout Ignore				 
 
 /*	#4th Adder	*/
-assign sign = !aux;
+assign sign = ~aux;
 assign A3[0] = 0;
 assign A3[1] = sign;
 assign A3[2] = 0;
-assign A3[3] = !sign;
-assign B3 = S2 ^ sign;
-assign Cin3 = sign;
+assign A3[3] = sign;
+assign B3[0] = S2[0] ^ sign;
+assign B3[1] = S2[1] ^ sign;
+assign B3[2] = S2[2] ^ sign;
+assign B3[3] = S2[3] ^ sign;
+assign Cin3 = aux;
 
 
 FourBitAdder Ad3 (.A (A3),

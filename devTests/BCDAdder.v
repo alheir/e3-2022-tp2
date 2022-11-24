@@ -1,29 +1,11 @@
-//-----------------------------------------------------------------------------
-//
-// Title       : \\BCD_Adder
-// Design      : BCD_Adder
-// Author      : fagrippino
-// Company     : ITBA
-//
-//-----------------------------------------------------------------------------
-//
-// File        : c:\My_Designs\TP2_ALU\BCD_Adder\src\BCD_Adder.v
-// Generated   : Sat Oct 29 14:05:53 2022
-// From        : interface description file
-// By          : Itf2Vhdl ver. 1.22
-//
-//-----------------------------------------------------------------------------
-//
-// Description : 
-//
-//-----------------------------------------------------------------------------
 `timescale 1 ns / 1 ps
 
+//Inicio de modulo
 module BCDAdder (
 	input wire [3:0] A,
 	input wire [3:0] B,
 	input wire Cin,
-	output wire S,
+	output wire [3:0] S,
 	output wire Cout
 );
 

@@ -37,12 +37,12 @@ module calc (
     output reg pin_max_LOAD,  //maxLOAD
     output reg pin_max_DIN,   //maxDIN
 
-    output reg pin_LED_D1,  //LEDD1
-    output reg pin_LED_D2,  //LEDD2
-    output reg pin_LED_D3,  //LEDD3
-    output reg pin_LED_D4,  //LEDD4
-    output reg pin_LED_D5,  //LEDD5
-    output reg pin_LED_D6,  //LEDD6
+    output wire pin_LED_D1,  //LEDD1
+    output wire pin_LED_D2,  //LEDD2
+    output wire pin_LED_D3,  //LEDD3
+    output wire pin_LED_D4,  //LEDD4
+    output wire pin_LED_D5,  //LEDD5
+    output wire pin_LED_D6,  //LEDD6
 
     input wire pin_SW1,   //SW1
     input wire pin_SW2,   //SW2
@@ -53,7 +53,7 @@ module calc (
     output wire led_green,
     output wire led_blue,
     output wire led_red
-    );
+);
 
 
     // Clock settings
@@ -75,9 +75,9 @@ module calc (
     wire enable;
     assign enable = 0;
 
-    fsm calcFsm(
+    fsm calcFsm (
         .clock(clock),
-        .reset(pin_reset),
+        .reset(pin_reset),//pin_reset),
 
         .row_result({pin_kb_Q1, pin_kb_Q0}),
         .valid_out(pin_kb_OUT),
@@ -88,11 +88,17 @@ module calc (
         .max_sck(pin_max_CLK),
         .max_load(pin_max_LOAD),
         .max_din(pin_max_DIN),
+        .led1(pin_LED_D1),
+        .led2(pin_LED_D2),
+        .led3(pin_LED_D3),
+        .led4(pin_LED_D4),
+        .led5(pin_LED_D5),
+        .led6(pin_LED_D6),
     );
 
 
     assign led_green = 1;
-    assign led_blue = 1;
-    assign led_red = 1;
+    assign led_blue  = 1;
+    assign led_red   = 1;
 
 endmodule

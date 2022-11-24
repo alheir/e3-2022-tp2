@@ -22,14 +22,14 @@
 //{{ Section below this comment is automatically maintained
 //   and may be overwritten
 //{module {ALU}}
-module ALU #(DIGIT_NUM = 8) (
+module alu #(parameter DIGIT_NUM = 8) (
     input wire [4*DIGIT_NUM-1:0] operand0,
     input wire operand0_sign,
     input wire [4*DIGIT_NUM-1:0] operand1,
     input wire operand1_sign,
     input wire [2:0] operation,
     output reg [4*DIGIT_NUM-1:0] result,
-    output reg result_sign
+    output reg result_sign,
     output reg flag_ov,
     output reg flag_sign
 );
@@ -50,8 +50,8 @@ module ALU #(DIGIT_NUM = 8) (
 
     wire [DIGIT_NUM-1:0] adder_cout;
     wire [DIGIT_NUM-1:0] adder_cin = {adder_cout[DIGIT_NUM-2:0], 0};
-    BCD_Adder [DIGIT_NUM-1:0] adders(.A(operand0), .B(operand1),)
-    BCD_8_Bit_Adder F0 (
+    
+    BCD_Word_Adder F0 (
         .A(operand0),
         .B(operand1),
         .S(result_adder),
@@ -59,7 +59,7 @@ module ALU #(DIGIT_NUM = 8) (
         .Cin(0)
     );
 
-    BCD_8_Bit_Subtractor F1 (
+    BCD_Word_Subtractor F1 (
         .A(operand0),
         .B(operand1),
         .S(S_substr),

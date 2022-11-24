@@ -79,13 +79,16 @@ parameter [1:0]
 
 
 always @ (posedge clock)
-	if(reset)
-		acthi_col_selector <= 2'b00;
-	else
+	// if(!reset) begin
+	// 	acthi_col_selector <= 2'b00;
+	// 	keytype <= 0;
+	// 	key <= 0;
+	// end
+	// else
 		acthi_col_selector <= acthi_col_selector + 1; // rota columnas
 	
 always @ (negedge clock)
-	if(!reset) begin
+	if(reset) begin
 		if(valid_out) begin
 			case(acthi_col_selector)
 				2'b00:
