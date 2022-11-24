@@ -3,3 +3,12 @@ i<>.\src\display.v
 i<>.\src\fsm.v
 i<>.\src\keyboard.v
 i<>.\src\calc.v
+i<>.\src\BCD_8_Bit_Subtractor.v
+i<>.\src\BCD_8_Bit_Adder.v
+i<>.\src\BCD_4_Bit_Adder.v
+i<>.\src\Full_Adder.v
+i<>.\src\BCD_Adder.v
+i<>.\src\BCD_Subtractor.v
+i<>.\src\Max7219.v
+i<>.\src\spi_master.v
+i<>.\src\counter.v

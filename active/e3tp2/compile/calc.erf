@@ -2,11 +2,9 @@ MESSAGE "Pass 1. Scanning modules hierarchy."
 MESSAGE_SP VCP2113 "Module \$root found in current working library."
 BEGINPROGRESS Compiling...
 UPDATEPROGRESS 35
-MESSAGE_SP VCP2113 "Module keyboard found in current working library."
-MESSAGE_SP VCP2113 "Module display found in current working library."
+MESSAGE_SP VCP2113 "Module spi_master found in current working library."
+MESSAGE_SP VCP2113 "Module counter found in current working library."
 MESSAGE "Pass 2. Processing instantiations."
-MESSAGE_SP VCP2876 "Implicit net declaration, symbol enable has not been declared in module fsm." "C:/Users/Asus/e3-2022-tp2/active/e3tp2/src/fsm.v" 79  19
-MESSAGE_SP VCP2876 "Implicit net declaration, symbol disp_mode has not been declared in module fsm." "C:/Users/Asus/e3-2022-tp2/active/e3tp2/src/fsm.v" 94  20
 UPDATEPROGRESS 45
 MESSAGE "Pass 3. Processing behavioral statements."
 UPDATEPROGRESS 80
@@ -14,16 +12,14 @@ MESSAGE "Running Optimizer."
 MESSAGE "ELB/DAG code generating."
 MESSAGE_SP VCP2113 "Module \$root found in current working library."
 UPDATEPROGRESS 82
-UPDATEPROGRESS 84
-UPDATEPROGRESS 86
+UPDATEPROGRESS 85
 UPDATEPROGRESS 88
 UPDATEPROGRESS 91
-UPDATEPROGRESS 93
-UPDATEPROGRESS 95
+UPDATEPROGRESS 94
 UPDATEPROGRESS 97
 UPDATEPROGRESS 100
-MESSAGE "Unit top modules: fsm."
-MESSAGE "$root top modules: fsm alu calc."
+MESSAGE "Unit top modules: max7219."
+MESSAGE "$root top modules: fsm alu calc ALU max7219."
 ENDPROGRESS Compiling...
 SUCCESS "Compile success 0 Errors 0 Warnings  Analysis time: 0[s]."
 WARNING ALOG: "The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available."

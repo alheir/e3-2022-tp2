@@ -16,18 +16,37 @@ LANGUAGE=VERILOG
 REFRESH_FLOW=1
 FLOWTOOLS=NONE
 FAMILY=Lattice iCE40UP
+fileopenfolder=C:\Users\popei\OneDrive\Escritorio\ITBA\e3-2022-tp2\devTests
 [Files]
 /alu.v=-1
 /display.v=-1
 /keyboard.v=-1
 /fsm.v=-1
 /calc.v=-1
+/BCD_8_Bit_Subtractor.v=-1
+/BCD_8_Bit_Adder.v=-1
+/BCD_4_Bit_Adder.v=-1
+/Full_Adder.v=-1
+/BCD_Adder.v=-1
+/BCD_Subtractor.v=-1
+/Max7219.v=-1
+/spi_master.v=-1
+/counter.v=-1
 [Files.Data]
 .\src\alu.v=Verilog Source Code
 .\src\display.v=Verilog Source Code
 .\src\keyboard.v=Verilog Source Code
 .\src\fsm.v=Verilog Source Code
 .\src\calc.v=Verilog Source Code
+.\src\BCD_8_Bit_Subtractor.v=Verilog Source Code
+.\src\BCD_8_Bit_Adder.v=Verilog Source Code
+.\src\BCD_4_Bit_Adder.v=Verilog Source Code
+.\src\Full_Adder.v=Verilog Source Code
+.\src\BCD_Adder.v=Verilog Source Code
+.\src\BCD_Subtractor.v=Verilog Source Code
+.\src\Max7219.v=Verilog Source Code
+.\src\spi_master.v=Verilog Source Code
+.\src\counter.v=Verilog Source Code
 [HierarchyViewer]
 HierarchyInformation=
 ShowHide=ShowTopLevel

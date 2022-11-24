@@ -1,23 +1,85 @@
-timestamp=1669263426379
+timestamp=1669313867714
 
 [~A]
 C:/Users/Asus/e3-2022-tp2/active/e3tp2/src/alu.v_display.v_fsm.v_keyboard.v_calc.v=0*9295*11978
 C:/Users/Asus/e3-2022-tp2/active/e3tp2/src/fsm.v=0*13142*14879
 C:/Users/Asus/e3-2022-tp2/active/e3tp2/src/keyboard.v=0*3319*4469
-LastVerilogToplevel=fsm
-ModifyID=5
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_4_Bit_Adder.v=0*35859*36497
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_8_Bit_Adder.v=0*82275*83137
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_8_Bit_Subtractor.v=0*80001*81125
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_Adder.v=0*86079*86759
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_Subtractor.v=0*90019*90992
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/Full_Adder.v=0*26373*26878
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/Max7219.v=0*108220*109619
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/alu.v=0*75505*76531
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/calc.v=0*71658*72061
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/counter.v=0*106270*106980
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/fsm.v=0*68882*70677
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/keyboard.v=0*66465*67673
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/spi_master.v=0*94888*96098
+LastVerilogToplevel=max7219
+ModifyID=50
 Version=74
 
 [~MFT]
-0=6|0calc.mgf|14879|4180
-1=4|1calc.mgf|34201|24426
-3=8|3calc.mgf|22680|15395
+0=6|0calc.mgf|109619|53029
+1=4|1calc.mgf|235840|188322
+3=8|3calc.mgf|112988|87723
 
 [$root]
-A/$root=22|||1*33827
-BinW64/$root=3*19138
-SLP=3*19253
-Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|c73a565f2ade592f8ac1c68f484c92160eec067ae492f644b3a4b387ed0b3cb0
+A/$root=22|||1*235434
+BinW64/$root=3*110348
+SLP=3*110463
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|c73a565f2ade592f8ac1c68f484c9216caab05da44dd13f609c41ca6cd1e42bf
+
+[ALU]
+A/ALU=22|../src/alu.v|25|1*167981
+BinW64/ALU=3*76806
+R=../src/alu.v|25
+SLP=3*78148
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|b3eb40c25b2a3c0379c7730185183eecc3b7997f4c600059b39bc2cec1a253f6
+
+[BCD_8_Bit_Adder]
+A/BCD_8_Bit_Adder=22|../src/BCD_8_Bit_Adder.v|1|1*190694
+BinW64/BCD_8_Bit_Adder=3*82424
+R=../src/BCD_8_Bit_Adder.v|1
+SLP=3*82549
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|30084383ec83b81016fbb05599aa435fa61fcc25b5dd22abe7a5e326af1a624c6ed28c5c2e7944ce3132bfb4f92e9fc1
+
+[BCD_8_Bit_Subtractor]
+A/BCD_8_Bit_Subtractor=22|../src/BCD_8_Bit_Subtractor.v|1|1*181506
+BinW64/BCD_8_Bit_Subtractor=3*80791
+R=../src/BCD_8_Bit_Subtractor.v|1
+SLP=3*81169
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|c47690127641d2a89a985d36df46319e5da81299f3a78e07f2674ad40806e3940b969c080d15a78a980013f4d915cc5a
+
+[BCD_Subtractor]
+A/BCD_Subtractor=22|../src/BCD_Subtractor.v|1|1*205272
+BinW64/BCD_Subtractor=3*88631
+R=../src/BCD_Subtractor.v|1
+SLP=3*90067
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|49a50f05913bc3d6ce64d87aa75348ce7dee010b50ebdd98015ede1052f0dd68493299fb0374f58f6c79aa7e04532333
+
+[Full_Adder]
+A/Full_Adder=22|../src/Full_Adder.v|1|1*64599
+BinW64/Full_Adder=3*32556
+R=../src/Full_Adder.v|1
+SLP=3*33023
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|fa69c5930488640f559f7e13be5c9d3b268a21810912fca3e06878041bd0da2d3c0a3b9bef8eb69d36200a0a8baffc96
+
+[\\\4-Bit_Adder \]
+A/\\\4-Bit_Adder \=22|../src/BCD_4_Bit_Adder.v|1|1*80612
+BinW64/\\\4-Bit_Adder \=3*40489
+R=../src/BCD_4_Bit_Adder.v|1
+SLP=3*40615
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|26802fc159bae9d5b482103545d843aa352f706a34a3fc4088f856881ac4db2994fd20a8096b0439d888a4df784b6af6
+
+[\\\BCD_Adder \]
+A/\\\BCD_Adder \=22|../src/BCD_Adder.v|1|1*197572
+BinW64/\\\BCD_Adder \=3*84764
+R=../src/BCD_Adder.v|1
+SLP=3*85387
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|e75c5a208605a35624ba9893ac6ee0134988cd3888c7b2134793da714670b932abaa3671165d9f063f91028f489afebb
 
 [alu]
 A/alu=22|../src/alu.v|25|1*18433
@@ -27,11 +89,18 @@ SLP=3*10462
 Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|fdc9c85601beb4171a6a25c637e2168ef4f194593b62cc8f6f3362e8fd04bffb
 
 [calc]
-A/calc=22|../src/calc.v|25|1*33338
-BinW64/calc=3*18958
+A/calc=22|../src/calc.v|25|1*157961
+BinW64/calc=3*74810
 R=../src/calc.v|25
-SLP=3*19072
-Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|e6f34343d128f259ddd662f538acc41a2f0432fb0ff26034e158f7c04f124f09
+SLP=3*74924
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|e6f34343d128f259ddd662f538acc41aca1808cd96fe4711f564e6d3ad1b582a
+
+[counter]
+A/counter=22|../src/counter.v|8|1*233435
+BinW64/counter=3*109167
+R=../src/counter.v|8
+SLP=3*109912
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|ec8a9ceecd40c97da6d5687ce01e262f26527262ddaa47cb266f3a3c4d9b973a3498d949ea2baf88029bf93722a6a92e
 
 [display]
 A/display=22|../src/display.v|26|1*18916
@@ -41,23 +110,47 @@ SLP=3*11111
 Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|3c176dad9cde25b1cb5a00594e6cbac026527262ddaa47cb266f3a3c4d9b973a2e2a3f6b960d03cad343a2b5c4b744a5
 
 [fsm]
-A/fsm=22|../src/fsm.v|25|1*34201
-BinW64/fsm=3*19321
+A/fsm=22|../src/fsm.v|25|1*151578
+BinW64/fsm=3*69585
 R=../src/fsm.v|25
-SLP=3*22680
-Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|d274df6d00ba93fbeb16b3acd8e09e75c43ac108a3adeb37f8027990f39de15c
+SLP=3*72944
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|d274df6d00ba93fbeb16b3acd8e09e751721d1818c8590ff2304fb4cebe621da
 
 [keyboard]
-A/keyboard=22|../src/keyboard.v|25|1*27031
-BinW64/keyboard=3*16525
+A/keyboard=22|../src/keyboard.v|25|1*144881
+BinW64/keyboard=3*66975
 R=../src/keyboard.v|25
-SLP=3*17967
-Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|a7159a133e5ed719d25ed6ca4991d672b9aed873503d5a24b94ab5e34825fdf6a81db65907d707e81741cd6655f5dc30
+SLP=3*68411
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|a7159a133e5ed719d25ed6ca4991d672b9aed873503d5a24b94ab5e34825fdf6ef6dd1e62579972cb4513f69aaf3d16e
+
+[max7219]
+A/max7219=22|../src/Max7219.v|1|1*235840
+BinW64/max7219=3*110531
+R=../src/Max7219.v|1
+SLP=3*112988
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|b8ea49aadfa5b0a619b6167a1a9e8f8c26527262ddaa47cb266f3a3c4d9b973ad6df972ed4cfb1c7cca7f206edf8ec98
+
+[spi_master]
+A/spi_master=22|../src/spi_master.v|7|1*215141
+BinW64/spi_master=3*95027
+R=../src/spi_master.v|7
+SLP=3*97430
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|d1256530a4d29ff9ec8c51bb757f76d67bca822e3b193d76ae7bdf8a2d46ede34fc12b0048a93ea36ef335aa7037ab3c
 
 [~U]
-$root=12|0*12573|
+$root=12|0*107571|
+ALU=12|0*75184||0x10
+BCD_8_Bit_Adder=12|0*82007|
+BCD_8_Bit_Subtractor=12|0*79669|
+BCD_Subtractor=12|0*89757|
+Full_Adder=12|0*26159|
+\\\4-Bit_Adder \=12|0*35605|
+\\\BCD_Adder \=12|0*85830|
 alu=12|0*7850||0x10
-calc=12|0*9147||0x10
+calc=12|0*71510||0x10
+counter=12|0*105998|
 display=12|0*7996|
-fsm=12|0*12771||0x10
-keyboard=12|0*8643|
+fsm=12|0*68511||0x10
+keyboard=12|0*65961|
+max7219=12|0*107881||0x10
+spi_master=12|0*94539|

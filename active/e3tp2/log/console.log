@@ -1,0 +1,302 @@
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/display.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Warning: VCP2515 display.v : (62, 45): Undefined module: num_mod was used. Port connection rules will not be checked at such instantiations.
+# Pass 2. Processing instantiations.
+# Error: VCP2000 display.v : (63, 23): Syntax error. Unexpected token: =.
+# Compile failure 1 Errors 1 Warnings  Analysis time: 0[s].
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/alu.v $dsn/src/display.v $dsn/src/keyboard.v $dsn/src/fsm.v $dsn/src/calc.v $dsn/src/BCD_8_Bit_Subtractor.v $dsn/src/BCD_8_Bit_Adder.v $dsn/src/BCD_4_Bit_Adder.v $dsn/src/Full_Adder.v $dsn/src/BCD_Adder.v $dsn/src/BCD_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Warning: VCP2515 display.v : (62, 45): Undefined module: num_mod was used. Port connection rules will not be checked at such instantiations.
+# Pass 2. Processing instantiations.
+# Error: VCP2000 display.v : (63, 23): Syntax error. Unexpected token: =.
+# Info: VCP2876 fsm.v : (79, 19): Implicit net declaration, symbol enable has not been declared in module fsm.
+# Info: VCP2876 fsm.v : (94, 20): Implicit net declaration, symbol disp_mode has not been declared in module fsm.
+# Compile failure 1 Errors 1 Warnings  Analysis time: 0[s].
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/alu.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Warning: VCP2515 alu.v : (62, 84): Undefined module: BCD_8_Bit_Adder was used. Port connection rules will not be checked at such instantiations.
+# Warning: VCP2515 alu.v : (64, 84): Undefined module: BCD_8_Bit_Subtractor was used. Port connection rules will not be checked at such instantiations.
+# Pass 2. Processing instantiations.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# Unit top modules: ALU.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 2 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/alu.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Warning: VCP2515 alu.v : (62, 84): Undefined module: BCD_8_Bit_Adder was used. Port connection rules will not be checked at such instantiations.
+# Warning: VCP2515 alu.v : (64, 84): Undefined module: BCD_8_Bit_Subtractor was used. Port connection rules will not be checked at such instantiations.
+# Pass 2. Processing instantiations.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# Unit top modules: ALU.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 2 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_8_Bit_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Warning: VCP2515 BCD_8_Bit_Adder.v : (20, 31): Undefined module: \\BCD_Adder was used. Port connection rules will not be checked at such instantiations.
+# Pass 2. Processing instantiations.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 1 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_8_Bit_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Warning: VCP2515 BCD_8_Bit_Subtractor.v : (31, 29): Undefined module: BCD_Subtractor was used. Port connection rules will not be checked at such instantiations.
+# Info: VCP2113 Module BCD_8_Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (84, 1): Some unconnected ports remain at instance: F9. Module BCD_8_Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 2 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_4_Bit_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Warning: VCP2515 BCD_4_Bit_Adder.v : (20, 31): Undefined module: Full_Adder was used. Port connection rules will not be checked at such instantiations.
+# Pass 2. Processing instantiations.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# Unit top modules: \\4-Bit_Adder.
+# $root top modules: fsm alu calc ALU \\4-Bit_Adder.
+# Compile success 0 Errors 1 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/Full_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Pass 2. Processing instantiations.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU \\4-Bit_Adder.
+# Compile success 0 Errors 0 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Adder.v : (32, 1): Some unconnected ports remain at instance: A1. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 1 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Subtractor.v : (37, 1): Some unconnected ports remain at instance: Ad0. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (65, 1): Some unconnected ports remain at instance: Ad2. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (81, 1): Some unconnected ports remain at instance: Ad3. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 3 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Subtractor.v : (37, 1): Some unconnected ports remain at instance: Ad0. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (65, 1): Some unconnected ports remain at instance: Ad2. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (81, 1): Some unconnected ports remain at instance: Ad3. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 3 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_4_Bit_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module Full_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 0 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_4_Bit_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module Full_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 0 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Adder.v : (32, 1): Some unconnected ports remain at instance: A1. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 1 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Subtractor.v : (37, 1): Some unconnected ports remain at instance: Ad0. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (65, 1): Some unconnected ports remain at instance: Ad2. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (81, 1): Some unconnected ports remain at instance: Ad3. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 3 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Subtractor.v : (37, 1): Some unconnected ports remain at instance: Ad0. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (65, 1): Some unconnected ports remain at instance: Ad2. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (81, 1): Some unconnected ports remain at instance: Ad3. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 3 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Subtractor.v : (37, 1): Some unconnected ports remain at instance: Ad0. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (65, 1): Some unconnected ports remain at instance: Ad2. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_Subtractor.v : (81, 1): Some unconnected ports remain at instance: Ad3. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 3 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_Adder.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module \\4-Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_Adder.v : (32, 1): Some unconnected ports remain at instance: A1. Module \\4-Bit_Adder has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 1 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_8_Bit_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module BCD_Subtractor found in current working library.
+# Info: VCP2113 Module BCD_8_Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (27, 1): Some unconnected ports remain at instance: F0. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (33, 1): Some unconnected ports remain at instance: F1. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (39, 1): Some unconnected ports remain at instance: F2. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (45, 1): Some unconnected ports remain at instance: F3. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (51, 1): Some unconnected ports remain at instance: F4. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (57, 1): Some unconnected ports remain at instance: F5. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (63, 1): Some unconnected ports remain at instance: F6. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (69, 1): Some unconnected ports remain at instance: F7. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (84, 1): Some unconnected ports remain at instance: F9. Module BCD_8_Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (91, 1): Some unconnected ports remain at instance: F10. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (97, 1): Some unconnected ports remain at instance: F11. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (103, 1): Some unconnected ports remain at instance: F12. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (109, 1): Some unconnected ports remain at instance: F13. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (115, 1): Some unconnected ports remain at instance: F14. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (121, 1): Some unconnected ports remain at instance: F15. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (127, 1): Some unconnected ports remain at instance: F16. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (133, 1): Some unconnected ports remain at instance: F17. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Pass 3. Processing behavioral statements.
+# Running Optimizer.
+# ELB/DAG code generating.
+# Info: VCP2113 Module \$root found in current working library.
+# $root top modules: fsm alu calc ALU.
+# Compile success 0 Errors 17 Warnings  Analysis time: 0[s].
+# Warning: ALOG: The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available.
+# done
+alog -O2 -sve -msg 5 -sv2k12 -work calc $dsn/src/BCD_8_Bit_Subtractor.v
+# Pass 1. Scanning modules hierarchy.
+# Info: VCP2113 Module \$root found in current working library.
+# Info: VCP2113 Module BCD_Subtractor found in current working library.
+# Info: VCP2113 Module BCD_8_Bit_Adder found in current working library.
+# Pass 2. Processing instantiations.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (27, 1): Some unconnected ports remain at instance: F0. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (33, 1): Some unconnected ports remain at instance: F1. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (39, 1): Some unconnected ports remain at instance: F2. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (45, 1): Some unconnected ports remain at instance: F3. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (51, 1): Some unconnected ports remain at instance: F4. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (57, 1): Some unconnected ports remain at instance: F5. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (63, 1): Some unconnected ports remain at instance: F6. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (69, 1): Some unconnected ports remain at instance: F7. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (84, 1): Some unconnected ports remain at instance: F9. Module BCD_8_Bit_Adder has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (91, 1): Some unconnected ports remain at instance: F10. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (97, 1): Some unconnected ports remain at instance: F11. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (103, 1): Some unconnected ports remain at instance: F12. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (109, 1): Some unconnected ports remain at instance: F13. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (115, 1): Some unconnected ports remain at instance: F14. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (121, 1): Some unconnected ports remain at instance: F15. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP2597 BCD_8_Bit_Subtractor.v : (127, 1): Some unconnected ports remain at instance: F16. Module BCD_Subtractor has unconnected  port(s) : Cout.
+# Warning: VCP25
