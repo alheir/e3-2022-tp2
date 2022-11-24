@@ -1,6 +1,20 @@
-5
+27
 ~M 0 "" 0 $root
 ~A 1 "" 0 $root
+~M 3 "../src/alu.v" 25 ALU
+~A 1 "../src/alu.v" 25 ALU
+~M 1 "../src/BCD_8_Bit_Adder.v" 1 BCD_8_Bit_Adder
+~A 1 "../src/BCD_8_Bit_Adder.v" 1 BCD_8_Bit_Adder
+~M 1 "../src/BCD_8_Bit_Subtractor.v" 1 BCD_8_Bit_Subtractor
+~A 1 "../src/BCD_8_Bit_Subtractor.v" 1 BCD_8_Bit_Subtractor
+~M 1 "../src/BCD_Subtractor.v" 1 BCD_Subtractor
+~A 1 "../src/BCD_Subtractor.v" 1 BCD_Subtractor
+~M 1 "../src/Full_Adder.v" 1 Full_Adder
+~A 1 "../src/Full_Adder.v" 1 Full_Adder
+~M 1 "../src/BCD_4_Bit_Adder.v" 1 \\\4-Bit_Adder \
+~A 1 "../src/BCD_4_Bit_Adder.v" 1 \\\4-Bit_Adder \
+~M 1 "../src/BCD_Adder.v" 1 \\\BCD_Adder \
+~A 1 "../src/BCD_Adder.v" 1 \\\BCD_Adder \
 ~M 3 "../src/alu.v" 25 alu
 ~A 1 "../src/alu.v" 25 alu
 ~M 3 "../src/calc.v" 25 calc
