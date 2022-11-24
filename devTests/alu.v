@@ -22,114 +22,99 @@
 //{{ Section below this comment is automatically maintained
 //   and may be overwritten
 //{module {ALU}}
-module ALU (
-    A,
-    B,
-    S_a,
-    S_b,
-    OP,
-    S,
-    Flag_OV,
-    Flag_S
+module ALU #(DIGIT_NUM = 8) (
+    input wire [4*DIGIT_NUM-1:0] operand0,
+    input wire operand0_sign,
+    input wire [4*DIGIT_NUM-1:0] operand1,
+    input wire operand1_sign,
+    input wire [2:0] operation,
+    output reg [4*DIGIT_NUM-1:0] result,
+    output reg result_sign
+    output reg flag_ov,
+    output reg flag_sign
 );
 
-    input wire [31:0] A;
-    input wire [31:0] B;
-    input wire S_a;
-    input wire S_b;
-    input wire OP;
-    output wire [31:0] S;
-    output wire Flag_OV;
-    output wire Flag_S;
+    wire [1:0] signs_aux = {S_a, S_b};
 
-    wire OP_aux = {OP, S_a, S_b};
-
-    parameter [2:0] E0 = 3'b000;
-    parameter [2:0] E1 = 3'b001;
-    parameter [2:0] E2 = 3'b010;
-    parameter [2:0] E3 = 3'b011;
-    parameter [2:0] E4 = 3'b100;
-    parameter [2:0] E5 = 3'b101;
-    parameter [2:0] E6 = 3'b110;
-    parameter [2:0] E7 = 3'b111;
-
-
-    reg [31:0] S_adder;
-    reg [31:0] S_substr;
-    reg [31:0] S_aux;
+    parameter [2:0]
+        SUM = 3'b000,
+        SUB = 3'b001,
+        MUL = 3'b010,
+        DIV = 3'b011,
+        EXP = 3'b100;
+        
+    reg [4*DIGIT_NUM-1:0] result_adder;
+    reg [4*DIGIT_NUM-1:0] result_subtraction;
     reg Cout_adder, Sign;
     reg Flag_aux_S, Flag_aux_OV;
 
+    wire [DIGIT_NUM-1:0] adder_cout;
+    wire [DIGIT_NUM-1:0] adder_cin = {adder_cout[DIGIT_NUM-2:0], 0};
+    BCD_Adder [DIGIT_NUM-1:0] adders(.A(operand0), .B(operand1),)
     BCD_8_Bit_Adder F0 (
-        .A(A),
-        .B(B),
-        .S(S_adder),
+        .A(operand0),
+        .B(operand1),
+        .S(result_adder),
         .Cout(Cout_adder),
         .Cin(0)
     );
 
     BCD_8_Bit_Subtractor F1 (
-        .A(A),
-        .B(B),
+        .A(operand0),
+        .B(operand1),
         .S(S_substr),
         .Cout(Sign),
         .Cin(0)
     );
 
-
-
-    always @(A, B, S_a, S_b, OP)
-        case (OP_aux)
-            E0: begin
-                S_aux = S_adder;
-                Flag_aux_S = 0;
-                Flag_aux_OV = Cout_adder;
-            end
-
-            E1: begin
-                S_aux = S_substr;
-                Flag_aux_S = Sign;
-                Flag_aux_OV = 0;
-            end
-
-            E2: begin
-                S_aux = S_substr;
-                Flag_aux_S = ~S;
-                Flag_aux_OV = 0;
-            end
-
-            E3: begin
-                S_aux = S_adder;
-                Flag_aux_S = 1;
-                Flag_aux_OV = Cout_adder;
-            end
-
-            E4: begin
-                S_aux = S_substr;
-                Flag_aux_S = Sign;
-                Flag_aux_OV = 0;
-            end
-
-            E5: begin
-                S_aux = S_adder;
-                Flag_aux_S = 0;
-                Flag_aux_OV = Cout_adder;
-            end
-
-            E6: begin
-                S_aux = S_adder;
-                Flag_aux_S = 1;
-                Flag_aux_OV = Cout_adder;
-            end
-
-            E7: begin
-                S_aux = S_substr;
-                Flag_aux_S = ~S;
-                Flag_aux_OV = 0;
-            end
+    always @(operand0, operand1, operand0_sign, operand1_sign, operation)
+        case(operation)
+            SUM: case(signs_aux)
+                2'b00: begin //+ + +
+                    result = S_adder;
+                    Flag_aux_S = 0;
+                    Flag_aux_OV = Cout_adder;
+                end
+                2'b01: begin // + + -
+                    result = S_substr;
+                    Flag_aux_S = Sign;
+                    Flag_aux_OV = 0;
+                end
+                2'b10: begin // - + +
+                    result = S_substr; // hago + - - pero con el signo invertido
+                    Flag_aux_S = ~Sign;
+                    Flag_aux_OV = 0;
+                end
+                2'b11: begin // - + -
+                    result = S_adder; // sumo los modulos y pongo -
+                    Flag_aux_S = 1;
+                    Flag_aux_OV = Cout_adder;
+                end
+            endcase
+            SUB: case(signs_aux)
+                2'b00: begin //+ - +
+                    result = S_substr;
+                    Flag_aux_S = Sign;
+                    Flag_aux_OV = 0;                
+                end
+                2'b01: begin // + - -
+                    result = S_adder; // sumo los modulos y pongo +
+                    Flag_aux_S = 0;
+                    Flag_aux_OV = Cout_adder;
+                end
+                2'b10: begin // - - +
+                    result = S_adder; // sumo los modulos y pongo -
+                    Flag_aux_S = 1;
+                    Flag_aux_OV = Cout_adder;
+                end
+                2'b11: begin // - - -
+                    result = S_substr; // hago |A|-|B| y le cambio el signo
+                    Flag_aux_S = ~Sign;
+                    Flag_aux_OV = 0;
+                end
+            endcase
         endcase
 
-    assign S = S_aux;
     assign Flag_S = Flag_aux_S;
     assign Flag_OV = Flag_aux_OV;
 

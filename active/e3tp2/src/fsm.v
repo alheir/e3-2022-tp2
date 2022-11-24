@@ -19,9 +19,6 @@
 //-----------------------------------------------------------------------------
 `timescale 1 ns / 1 ps
 
-//{{ Section below this comment is automatically maintained
-//   and may be overwritten
-//{module {fsm}}
 module fsm #(parameter DIGIT_NUM=8) (
 	input wire clock,
 	input wire reset
@@ -49,6 +46,11 @@ reg operand0_sign;
 reg [DIGIT_NUM*4-1:0] operand1;	
 reg operand1_sign;
 reg [2:0] operation;
+wire [DIGIT_NUM*4-1:0] result;	
+wire result_sign;
+wire flag_ov;
+wire flag_sign;
+
 reg [3:0] brightness;
 
 parameter NUMBER=0,
@@ -98,11 +100,21 @@ display displayMod (
 );	 
 
 
-// alu aluMod();
+ALU aluMod(
+	.operand0(operand0),
+	.operand0_sign(operand0_sign),
+	.operand1(.operand1),
+	.operand1_sign(operand1_sign),
+	.operation(operation),
+	.result(result),
+	.result_sign(result_sign),
+	.flag_ov(flag_ov),
+	.flag_sign(flag_sign)
+);
 
 always @ (posedge clock)
 	if(reset) begin
-		// reset async
+		// reset sync
 		curr_sta <= LOADING_OP_0;	  
 		last_clock_keyrx <= 0;
 		operand0 <= 0;
@@ -140,7 +152,13 @@ always @ (posedge clock)
 					endcase
 				end
 				else if(key == NUMERAL_BUT) begin
-					// decimal point?
+					// decimal point? por ahora hago que borre
+					case(curr_sta)
+						LOADING_OP_0:
+							operand0 = {0,0,0,0, operand0[4*DIGIT_NUM-1:4]};
+						LOADING_OP_1:
+							operand1 = {0,0,0,0, operand1[4*DIGIT_NUM-1:4]};
+					endcase
 				end
 				else begin
 					case(key)
@@ -149,14 +167,16 @@ always @ (posedge clock)
 							if(curr_sta == LOADING_OP_0) begin
 								if(operand0 != 0) begin
 									operation <= SUM_OP; // suma
-									curr_sta <= LOADING_OP_1;
+									curr_sta <= LOADING_OP_1; //pasar a carga del siguiente
 								end
 								else operand0_sign <= ~operand0_sign;
 								// MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
 							end
 							else if(curr_sta == LOADING_OP_1) begin
 								if(operand1 != 0) begin
-									// OBTENER RESULTADO SUMA, PONER EN OPERANDO 0
+									operand0 <= result; // pasa resultado a op0
+									curr_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
+
 									operand1 <= 0;
 									operand1_sign <= 0;
 								end
@@ -174,7 +194,9 @@ always @ (posedge clock)
 							end
 							else if(curr_sta == LOADING_OP_1) begin
 								if(operand1 != 0) begin
-									// OBTENER RESULTADO RESTA, PONER EN OPERANDO 0
+									operand0 <= result; // pasa resultado a op0
+									curr_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
+									
 									operand1 <= 0;
 									operand1_sign <= 0;
 								end
@@ -185,8 +207,8 @@ always @ (posedge clock)
 						C_BUT: begin // Clear
 							operand0 <= 0;
 							operand0_sign <= 0;
-							operand1_sign <= 0;
 							operand1 <= 0;
+							operand1_sign <= 0;
 							curr_sta <= LOADING_OP_0;
 						end
 						D_BUT: begin // Igual

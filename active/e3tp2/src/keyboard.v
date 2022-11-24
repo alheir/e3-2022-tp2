@@ -118,6 +118,6 @@ always @ (posedge clock)
 		end
 	end
 
-assign keytype = key <= NINE_VAL;
+assign keytype = (key <= NINE_VAL);
 
 endmodule
