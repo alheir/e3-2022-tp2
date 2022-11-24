@@ -1,4 +1,4 @@
-50
+51
 ~M 0 "" 0 $root
 ~A 1 "" 0 $root
 ~M 3 "../src/alu.v" 25 ALU
@@ -19,6 +19,8 @@
 ~A 1 "../src/alu.v" 25 alu
 ~M 3 "../src/calc.v" 25 calc
 ~A 1 "../src/calc.v" 25 calc
+~M 1 "../src/display.v" 67 code_mod
+~A 1 "../src/display.v" 67 code_mod
 ~M 1 "../src/counter.v" 8 counter
 ~A 1 "../src/counter.v" 8 counter
 ~M 1 "../src/display.v" 26 display

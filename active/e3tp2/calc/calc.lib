@@ -1,4 +1,4 @@
-timestamp=1669313867714
+timestamp=1669315960838
 
 [~A]
 C:/Users/Asus/e3-2022-tp2/active/e3tp2/src/alu.v_display.v_fsm.v_keyboard.v_calc.v=0*9295*11978
@@ -14,23 +14,24 @@ C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/Max7219.v=0
 C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/alu.v=0*75505*76531
 C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/calc.v=0*71658*72061
 C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/counter.v=0*106270*106980
+C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/display.v=0*111055*112069
 C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/fsm.v=0*68882*70677
 C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/keyboard.v=0*66465*67673
 C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/spi_master.v=0*94888*96098
 LastVerilogToplevel=max7219
-ModifyID=50
+ModifyID=51
 Version=74
 
 [~MFT]
-0=6|0calc.mgf|109619|53029
-1=4|1calc.mgf|235840|188322
-3=8|3calc.mgf|112988|87723
+0=5|0calc.mgf|112069|53029
+1=5|1calc.mgf|242732|190850
+3=10|3calc.mgf|116875|88859
 
 [$root]
-A/$root=22|||1*235434
-BinW64/$root=3*110348
-SLP=3*110463
-Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|c73a565f2ade592f8ac1c68f484c9216caab05da44dd13f609c41ca6cd1e42bf
+A/$root=22|||1*240268
+BinW64/$root=3*114186
+SLP=3*114301
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|c73a565f2ade592f8ac1c68f484c9216b5d5486c43b003ce4f2468b1d75313e5
 
 [ALU]
 A/ALU=22|../src/alu.v|25|1*167981
@@ -95,6 +96,13 @@ R=../src/calc.v|25
 SLP=3*74924
 Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|e6f34343d128f259ddd662f538acc41aca1808cd96fe4711f564e6d3ad1b582a
 
+[code_mod]
+A/code_mod=22|../src/display.v|67|1*242732
+BinW64/code_mod=3*115592
+R=../src/display.v|67
+SLP=3*116875
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|10f85d09fa690e41c09d4b34aed3116f6b143096d3c51d0a9c6fa1cf847b2f8666fd5925453fbe19186c2a1e6e275b39
+
 [counter]
 A/counter=22|../src/counter.v|8|1*233435
 BinW64/counter=3*109167
@@ -103,11 +111,11 @@ SLP=3*109912
 Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|ec8a9ceecd40c97da6d5687ce01e262f26527262ddaa47cb266f3a3c4d9b973a3498d949ea2baf88029bf93722a6a92e
 
 [display]
-A/display=22|../src/display.v|26|1*18916
-BinW64/display=3*10526
+A/display=22|../src/display.v|26|1*240658
+BinW64/display=3*114369
 R=../src/display.v|26
-SLP=3*11111
-Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|3c176dad9cde25b1cb5a00594e6cbac026527262ddaa47cb266f3a3c4d9b973a2e2a3f6b960d03cad343a2b5c4b744a5
+SLP=3*115148
+Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|3c176dad9cde25b1cb5a00594e6cbac026527262ddaa47cb266f3a3c4d9b973aa019fdab545c075b5af774cd370471b4
 
 [fsm]
 A/fsm=22|../src/fsm.v|25|1*151578
@@ -138,7 +146,7 @@ SLP=3*97430
 Version=13.0.376.8320 (Windows64)|0000000b789cd3f53752d02d2e33ca3634020010aa02e5|d1256530a4d29ff9ec8c51bb757f76d67bca822e3b193d76ae7bdf8a2d46ede34fc12b0048a93ea36ef335aa7037ab3c
 
 [~U]
-$root=12|0*107571|
+$root=12|0*110210|
 ALU=12|0*75184||0x10
 BCD_8_Bit_Adder=12|0*82007|
 BCD_8_Bit_Subtractor=12|0*79669|
@@ -148,8 +156,9 @@ Full_Adder=12|0*26159|
 \\\BCD_Adder \=12|0*85830|
 alu=12|0*7850||0x10
 calc=12|0*71510||0x10
+code_mod=12|0*110782|
 counter=12|0*105998|
-display=12|0*7996|
+display=12|0*110520|
 fsm=12|0*68511||0x10
 keyboard=12|0*65961|
 max7219=12|0*107881||0x10

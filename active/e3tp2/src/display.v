@@ -59,8 +59,8 @@ always @ (posedge clk)
 			end
 	end
 
-num_mod num_mod (EN_num, num, dp, clk, rst);
-code_mod code_mod (EN = EN_code, code = code, clk = clk, rst = rst);
+num_mod num_mod (.EN(EN_num), .num(num), .dp(dp), .clk(clk), .rst(rst));
+code_mod code_mod (.EN(EN_code), .code(code), .clk(clk), .rst(rst));
 
 endmodule
 
@@ -77,4 +77,35 @@ parameter	BRIGHT_1 = 0,
 			HOLA = 4,
 			CHAU = 5;
 			
+reg addr_in;
+reg din;
+			
+always @ (posedge clk)
+	begin
+		case(code)
+			BRIGHT_1:
+			begin
+				addr_in = 8'hXA;
+				din = 8'hX0;
+			end
+			BRIGHT_2:
+			begin
+				addr_in = 8'hXA;
+				din = 8'hX5;
+			end
+			BRIGHT_3:
+			begin
+				addr_in = 8'hXA;
+				din = 8'hXA;
+			end
+			BRIGHT_4:
+			begin
+				addr_in = 8'hXA;
+				din = 8'hXF;
+			end	
+		endcase		
+	end	
+
+max7219 display (.clk(clk), .rst(rst), .addr_in(din), .start(0) , .cs(0), .dout(0), .sck(clk), .busy(0));
+
 endmodule
