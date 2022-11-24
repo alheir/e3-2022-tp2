@@ -37,8 +37,8 @@ assign Cin0 = 1;
 \\4-Bit_Adder Ad0 (.A (A0),
 				 .B (B0),
 				 .S (S0),
+				 .Cout (open),
 				 .Cin (Cin0));
-				 //Cout Ignore
 				 
 /*	#2nd Adder	*/
 assign A1 = A;
@@ -65,8 +65,8 @@ assign Cin2 = 0;
 \\4-Bit_Adder Ad2 (.A (A2),
 				 .B (B2),
 				 .S (S2),
-				 .Cin (Cin2));
-				 //Cout Ignore				 
+				 .Cout (open),
+				 .Cin (Cin2));				 
 
 /*	#4th Adder	*/
 assign sign = !aux;
@@ -81,8 +81,8 @@ assign Cin3 = sign;
 \\4-Bit_Adder Ad3 (.A (A3),
 				 .B (B3),
 				 .S (S3),
+				 .Cout (open),
 				 .Cin (Cin3));
-				 //Cout Ignore
 				 
 /*	BCD Substract out's	*/
 assign Cout = sign;

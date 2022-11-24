@@ -29,6 +29,8 @@ fileopenfolder=C:\Users\popei\PycharmProjects\Downloads
 /Full_Adder.v=-1
 /BCD_Adder.v=-1
 /BCD_Subtractor.v=-1
+/BCD_Adder.v=-1
+/BCD_Subtractor.v=-1
 [Files.Data]
 .\src\alu.v=Verilog Source Code
 .\src\display.v=Verilog Source Code
@@ -39,6 +41,8 @@ fileopenfolder=C:\Users\popei\PycharmProjects\Downloads
 .\src\BCD_8_Bit_Adder.v=Verilog Source Code
 .\src\BCD_4_Bit_Adder.v=Verilog Source Code
 .\src\Full_Adder.v=Verilog Source Code
+.\src\BCD_Adder.v=Verilog Source Code
+.\src\BCD_Subtractor.v=Verilog Source Code
 .\src\BCD_Adder.v=Verilog Source Code
 .\src\BCD_Subtractor.v=Verilog Source Code
 [HierarchyViewer]

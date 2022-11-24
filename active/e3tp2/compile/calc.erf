@@ -4,8 +4,8 @@ BEGINPROGRESS Compiling...
 UPDATEPROGRESS 35
 MESSAGE_SP VCP2113 "Module \\4-Bit_Adder found in current working library."
 MESSAGE "Pass 2. Processing instantiations."
+MESSAGE_SP VCP2876 "Implicit net declaration, symbol open has not been declared in module BCD_Subtractor." "C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_Subtractor.v" 40  29
 UPDATEPROGRESS 45
-WARNING VCP2597 "Some unconnected ports remain at instance: A1. Module \\4-Bit_Adder has unconnected  port(s) : Cout." "C:/Users/popei/OneDrive/Escritorio/ITBA/e3-2022-tp2/active/e3tp2/src/BCD_Adder.v" 32  1
 MESSAGE "Pass 3. Processing behavioral statements."
 UPDATEPROGRESS 80
 MESSAGE "Running Optimizer."
@@ -20,6 +20,6 @@ UPDATEPROGRESS 97
 UPDATEPROGRESS 100
 MESSAGE "$root top modules: fsm alu calc ALU."
 ENDPROGRESS Compiling...
-SUCCESS "Compile success 0 Errors 1 Warnings  Analysis time: 0[s]."
+SUCCESS "Compile success 0 Errors 0 Warnings  Analysis time: 0[s]."
 WARNING ALOG: "The source is compiled without the -dbg switch. Line breakpoints and assertion debug will not be available."
 MESSAGE "done"
