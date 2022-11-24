@@ -88,6 +88,7 @@ keyboard keyboardMod(
 
 always @ (posedge clock)
 	if(reset) begin
+		// reset async
 		curr_sta <= LOADING_OP_0;	  
 		last_clock_keyrx <= 0;
 		operand0 <= 0;
@@ -97,7 +98,7 @@ always @ (posedge clock)
 		brightness <= 0;
 	end
 	else begin
-		if(~last_clock_keyrx and valid_out) begin // se recibio una nueva tecla
+		if(~last_clock_keyrx and valid_out) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
 			last_clock_keyrx <= 1;
 			if(keytype == NUMBER) begin // se recibio un numero
 				case(curr_sta)
@@ -109,9 +110,9 @@ always @ (posedge clock)
 						operand1 = operand1 << 4;
 						operand1[3:0] = key;
 					end
-					ALT_INPUT_OP0, ALT_INPUT_OP1:
+					ALT_INPUT_OP0, ALT_INPUT_OP1: // esta en menu alternativo
 						if(key < 8)
-							brightness <= key << 1;
+							brightness <= key << 1; // multiplica por 2 el valor ingresado, entre 0 y 7
 				endcase
 
 			end
@@ -150,7 +151,7 @@ always @ (posedge clock)
 						B_BUT: begin
 							if(curr_sta == LOADING_OP_0) begin
 								if(operand0 != 0) begin
-									operation <= SUB_OP; // suma
+									operation <= SUB_OP; // resta
 									curr_sta => LOADING_OP_1;
 								end
 								else operand0_sign <= ~operand0_sign;
@@ -164,18 +165,21 @@ always @ (posedge clock)
 								else operand1_sign <= ~operand1_sign;
 							end
 						end
-						C_BUT: begin
+						C_BUT: begin // Clear
 							operand0 <= 0;
 							operand0_sign <= 0;
 							operand1_sign <= 0;
 							operand1 <= 0;
 							curr_sta <= LOADING_OP_0;
 						end
-						D_BUT: begin
-							operand1 <= 0;
-							operand1_sign <= 0;
-							curr_sta
-						end; // igual?
+						D_BUT: begin // Igual
+							if(curr_sta <= LOADING_OP_1) begin
+								operand1 <= 0;
+								operand1_sign <= 0;
+								// obtener resultado operando, poner en op0
+								curr_sta => LOADING_OP_0;
+							end
+						end;
 					endcase
 				end
 			end

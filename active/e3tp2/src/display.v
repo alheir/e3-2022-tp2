@@ -22,10 +22,27 @@
 //{{ Section below this comment is automatically maintained
 //   and may be overwritten
 //{module {display}}
-module display ();
 
-//}} End of automatically maintained section
+module display (
+	input clk,
+    input rst,
+	input latch, //to read or not to read, that is the question?
+    input mode,  // 0: numbers, 1: codes
+    input [2:0] dp,  // 111 -> DP en el MSD | 000 -> DP en el LSD
+    input [3:0] codes, // Códigos hardcodados a definir. Para printear o hacer cosas ya definidas dentro del módulo	
+	input [31:0] num
+	);	 
 
-// -- Enter your statements here -- //
+reg ENM = 0;
+reg ENL = 1;
+	
+always @ (posedge clk)
+	if (latch)
+		if (!mode)	ENM = 1;
+	else
+		ENL = 0;
+
+num_mod num (ENM && ENL, num, dp, clk, rst);
+codes-mod codes (!ENM && ENL, codes, clk, rst);
 
 endmodule
