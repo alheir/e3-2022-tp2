@@ -18,7 +18,7 @@ module spi_master (
   );
 
   // These are currently non-functional until I learn what they're for
-  localparam CLK_DIV = 4'h8;
+  localparam CLK_DIV = 4'h1;
   localparam CPOL = 1'h0;
   localparam CPHA = 1'h0;
 

@@ -1,4 +1,7 @@
-module display (
+module display #(
+    parameter DIGIT_NUM = 8,
+    parameter CLK_DIV   = 4
+) (
     output wire pin_LED_D1,
     output wire pin_LED_D2,
     output wire pin_LED_D3,
@@ -18,18 +21,20 @@ module display (
 );
 
     wire clock;
+    wire clock_raw;
     wire reset;
-    // SB_LFOSC intlosc (
-    //     .CLKLFEN(1'b1),
-    //     .CLKLFPU(1'b1),
-    //     .CLKLF  (clock)
-    // )  /* synthesis ROUTE_THROUGH_FABRIC = [1] */;
+
     SB_HFOSC #(
-        .CLKHF_DIV("0b11")  // 12 MHz = ~48 MHz / 4 (0b00=1, 0b01=2, 0b10=4, 0b11=8)
+        .CLKHF_DIV("0b11")  // 6 MHz = ~48 MHz / 8 (0b00=1, 0b01=2, 0b10=4, 0b11=8)
     ) hf_osc (
         .CLKHFPU(1'b1),
         .CLKHFEN(1'b1),
-        .CLKHF  (clock)
+        .CLKHF  (clock_raw)
+    );
+    Clock_divider clocky (
+        .clock_in(clock_raw),
+        .clock_out(clock),  // 6MHz / 4 = 1.5MHz
+        .clk_div(CLK_DIV)
     );
 
     reg max_rst = 1'b1;
@@ -98,21 +103,21 @@ module display (
                 end else if (pin_SW1 != 1'h1 && started == 1'h1) begin
                     next_intensity = curr_intensity + 1'h1;
                 end else if (pin_SW3 != 1'h1 && started == 1'h1) begin
-                    // next_bcd_buffer = {curr_bcd_buffer[3:0], curr_bcd_buffer[31:4]};
+                    next_bcd_buffer = {curr_bcd_buffer[3:0], curr_bcd_buffer[31:4]};
                 end else if (pin_SW4 != 1'h1 && started == 1'h1) begin
-                    // next_state = STATE_WRITE_BCD;
+                    next_state = STATE_WRITE_BCD;
                 end
 
-                if (started == 1'h1) begin
-                    if (counter[22] == 1'h1) begin
-                        next_bcd_buffer = {curr_bcd_buffer[3:0], curr_bcd_buffer[31:4]};
-                        next_state = STATE_WRITE_BCD;
-                    end
-                    if (counter[24] == 1'h1) begin
-                        next_intensity = curr_intensity + 1'h1;
-                        next_state = STATE_SET_INT;
-                    end
-                end
+                // if (started == 1'h1) begin
+                //     if (counter[22] == 1'h1) begin
+                //         next_bcd_buffer = {curr_bcd_buffer[3:0], curr_bcd_buffer[31:4]};
+                //         next_state = STATE_WRITE_BCD;
+                //     end
+                //     if (counter[24] == 1'h1) begin
+                //         next_intensity = curr_intensity + 1'h1;
+                //         next_state = STATE_SET_INT;
+                //     end
+                // end
 
 
             end
@@ -216,7 +221,7 @@ module display (
             curr_intensity <= next_intensity;
             started <= check_started;
 
-            counter <= counter + 1;
+            // counter <= counter + 1;
 
         end
     end
@@ -232,6 +237,31 @@ module display (
     // assign pin_LED_D6 = 0;
 
     assign pin_LED_D2 = ((stepa != 1'h1 || pin_SW1 != 1'h1) && started == 1'h1);
-    assign {pin_LED_D5, pin_LED_D3, pin_LED_D4, pin_LED_D6, pin_LED_D1} = curr_dig_index[4:0];
+    assign {pin_LED_D5, pin_LED_D3, pin_LED_D4, pin_LED_D6, pin_LED_D1} = curr_state[4:0];
 
 endmodule  //display
+
+module counterrr (
+    input clk,
+    input rstn,
+    output reg [3:0] out
+);
+    always @(posedge clk) begin
+        if (!rstn) out <= 0;
+        else out <= out + 1;
+    end
+endmodule
+
+module Clock_divider (
+    input wire clock_in,
+    output reg clock_out,
+    input integer clk_div
+);
+    reg [27:0] counter = 28'd0;
+
+    always @(posedge clock_in) begin
+        counter <= counter + 28'd1;
+        if (counter >= (clk_div - 1)) counter <= 28'd0;
+        clock_out <= (counter < clk_div / 2) ? 1'b1 : 1'b0;
+    end
+endmodule
