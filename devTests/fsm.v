@@ -38,9 +38,9 @@ module fsm #(
     output reg led5,  //LEDD5
     output reg led6,  //LEDD6
 
-    output wire max_sck,   //maxCLK
-    output wire max_load,  //maxLOAD
-    output wire max_din    //maxDIN
+    output wire max_sck,  //maxCLK
+    output wire max_cs,   //maxCS
+    output wire max_din   //maxDIN
 );
 
     parameter [2:0]			 
@@ -103,8 +103,8 @@ module fsm #(
         .brightness(brightness),
         .sck(max_sck),
         .din(max_din),
-        .load(max_load),
-        .led_D(led5)
+        .cs(max_cs),
+        .led_D5(led5)
     );
 
     reg [DIGIT_NUM*4-1:0] operand0;
@@ -118,7 +118,7 @@ module fsm #(
     reg [3:0] operand0_dp;
     reg [3:0] operand1_dp;
     alu aluMod (
-        .operand0(operand0),    
+        .operand0(operand0),
         .operand0_sign(operand0_sign),
         .operand0_dp(0),
         .operand1(operand1),
@@ -142,7 +142,7 @@ module fsm #(
             brightness <= 0;
             lastkey <= 0;
             operand0_dp <= 0;
-            operand1_dp <= 0; 
+            operand1_dp <= 0;
         end else begin
             curr_sta <= next_sta;
             if(~last_clock_keyrx && valid_out) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
@@ -164,11 +164,11 @@ module fsm #(
                     endcase
                 end else begin
                     if (key == FN_BUT) begin
-                        case(curr_sta)
-                        LOADING_OP_0: next_sta <= ALT_INPUT_OP0;
-                        LOADING_OP_1: next_sta <= ALT_INPUT_OP1;
-                        ALT_INPUT_OP0: next_sta <= LOADING_OP_0;
-                        ALT_INPUT_OP1: next_sta <= LOADING_OP_1;
+                        case (curr_sta)
+                            LOADING_OP_0:  next_sta <= ALT_INPUT_OP0;
+                            LOADING_OP_1:  next_sta <= ALT_INPUT_OP1;
+                            ALT_INPUT_OP0: next_sta <= LOADING_OP_0;
+                            ALT_INPUT_OP1: next_sta <= LOADING_OP_1;
                         endcase
                     end else if (key == NUMERAL_BUT) begin
                         // decimal point? por ahora hago que borre
@@ -250,7 +250,7 @@ module fsm #(
     // assign led6 = curr_sta == LOADING_OP_1;
     // assign led4 = curr_sta == ALT_INPUT_OP0;
     // assign led3 = curr_sta == ALT_INPUT_OP1;
-    
+
     assign led2 = ~result_sign;
     // assign led5 = operand1_sign;
 endmodule

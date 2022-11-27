@@ -252,6 +252,7 @@ module counterrr (
     end
 endmodule
 
+
 module Clock_divider (
     input wire clock_in,
     output reg clock_out,

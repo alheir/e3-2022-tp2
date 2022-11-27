@@ -59,6 +59,6 @@ set_io -nowarn gpio_3 3
 set_io -nowarn gpio_48 48
 set_io -nowarn gpio_45 45
 set_io -nowarn pin_max_CLK 47
-set_io -nowarn pin_max_LOAD 46
+set_io -nowarn pin_max_CS 46
 set_io -nowarn pin_max_DIN 2
 
