@@ -9,6 +9,7 @@ module BCDSubtractor (
 	output wire Cout
 );
 
+
 /*	Variables	*/
 wire [3:0]A0;
 wire [3:0]B0;
@@ -27,8 +28,11 @@ wire aux, sign;
 
 /*	#1st Adder	*/
 assign A0 = 4'b1010;
-assign B0 = B ^ 4'b1111;
-assign Cin0 = 1;
+assign B0[0] = B[0] ^ 1;
+assign B0[1] = B[1] ^ 1;
+assign B0[2] = B[2] ^ 1;
+assign B0[3] = B[3] ^ 1;
+assign Cin0 = 0;
 
 FourBitAdder Ad0 (.A (A0),
 				 .B (B0),

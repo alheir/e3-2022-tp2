@@ -4,7 +4,7 @@ module display (
     input wire latch,
     input wire mode,  // 0: numbers, 1: codes
     input wire [2:0] dp,  // 111 -> DP en el MSD | 000 -> DP en el LSD
-    input wire [3:0] code, // C�digos hardcodados a definir. Para printear o hacer cosas ya definidas dentro�del�m�dulo	
+    input wire [3:0] code,	
     input wire [31:0] num,
     input wire [3:0] brightness,
 

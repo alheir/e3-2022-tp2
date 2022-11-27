@@ -1,122 +1,70 @@
-//-----------------------------------------------------------------------------
-//
-// Title       : ALU
-// Design      : BCD_Adder
-// Author      : fagrippino
-// Company     : ITBA
-//
-//-----------------------------------------------------------------------------
-//
-// File        : C:\My_Designs\TP2_ALU\BCD_Adder\src\ALU.v
-// Generated   : Thu Nov 24 02:31:41 2022
-// From        : interface description file
-// By          : Itf2Vhdl ver. 1.22
-//
-//-----------------------------------------------------------------------------
-//
-// Description : 
-//
-//-----------------------------------------------------------------------------
-`timescale 1 ns / 1 ps
+module bcd2bin
+   (
+    input wire [31:0] num,
+    output reg [23:0] bin
+   );
 
-//{{ Section below this comment is automatically maintained
-//   and may be overwritten
-//{module {ALU}}
-module alu #(parameter DIGIT_NUM = 8) (
-    input wire [4*DIGIT_NUM-1:0] operand0,
+   assign bin = (num[31:28] * 10'd10000000) + (num[27:24] * 10'd1000000) + (num[23:20] * 10'd100000) + (num[19:16] * 10'd10000) + (num[15:12] * 10'd1000) + (num[11:8] * 7'd100) + (num[7:4] * 4'd10) + num[6:3];
+
+endmodule
+
+module bin2bcd(
+   input [23:0] bin,
+   output reg [31:0] bcd
+   );
+   
+integer i;
+	
+always @(bin) begin
+    bcd=0;		 	
+    for (i=0;i<24;i=i+1)
+    begin					                                //Iterate once for each bit in input number
+        if (bcd[3:0] >= 5) bcd[3:0] = bcd[3:0] + 3;		    //If any BCD digit is >= 5, add three
+	    if (bcd[7:4] >= 5) bcd[7:4] = bcd[7:4] + 3;
+	    if (bcd[11:8] >= 5) bcd[11:8] = bcd[11:8] + 3;
+	    if (bcd[15:12] >= 5) bcd[15:12] = bcd[15:12] + 3;
+        if (bcd[19:16] >= 5) bcd[19:16] = bcd[19:16] + 3;
+        if (bcd[23:20] >= 5) bcd[23:20] = bcd[23:20] + 3;
+        if (bcd[27:24] >= 5) bcd[27:24] = bcd[27:24] + 3;
+        if (bcd[31:28] >= 5) bcd[30:28] = bcd[30:28] + 3;
+	    bcd = {bcd[30:0], bin[23-i]};				        //Shift one bit, and shift in proper bit from input 
+    end
+end
+endmodule
+
+module alu #(parameter DIGIT_NUM=8) (
     input wire operand0_sign,
-    input wire [4*DIGIT_NUM-1:0] operand1,
+    input wire [DIGIT_NUM*4-1:0] operand0,
+    input wire [3:0] operand0_dp,
     input wire operand1_sign,
+    input wire [DIGIT_NUM*4-1:0] operand1,
+    input wire [2:0] operand1_dp,
     input wire [2:0] operation,
-    output reg [4*DIGIT_NUM-1:0] result,
-    output reg result_sign,
-    output reg flag_ov,
-    output reg flag_sign
+    output reg [DIGIT_NUM*4-1:0] result,
+    output reg result_sign
 );
 
-    wire [1:0] signs_aux = {S_a, S_b};
+wire [23:0] bin0;
+wire [23:0] bin1;
+wire [24:0] res;
+wire [24:0] bin0_signed = (operand0_sign ? -bin0 : bin0)/(10**operand0_dp);
+wire [24:0] bin1_signed = (operand1_sign ? -bin1 : bin1)/(10**operand1_dp);
 
-    parameter [2:0]
-        SUM = 3'b000,
-        SUB = 3'b001,
-        MUL = 3'b010,
-        DIV = 3'b011,
-        EXP = 3'b100;
-        
-    reg [4*DIGIT_NUM-1:0] result_adder;
-    reg [4*DIGIT_NUM-1:0] result_subtraction;
-    reg Cout_adder, Sign;
-    reg Flag_aux_S, Flag_aux_OV;
+bcd2bin operand1_i (.num(operand0), .bin(bin0));
+bcd2bin operand2_i (.num(operand1), .bin(bin1));
 
-    wire [DIGIT_NUM-1:0] adder_cout;
-    wire [DIGIT_NUM-1:0] adder_cin = {adder_cout[DIGIT_NUM-2:0], 0};
-    
-    BCD_Word_Adder F0 (
-        .A(operand0),
-        .B(operand1),
-        .S(result_adder),
-        .Cout(Cout_adder),
-        .Cin(0)
-    );
+always @ (operand0, operand0_sign, operand1, operand1_sign, operation)
+begin
+    case(operation)
+        0: res = bin0_signed + bin1_signed;
+        1: res = bin0_signed - bin1_signed;
+        2: res = bin0_signed * bin1_signed;
+        3: res = bin0_signed / bin1_signed;
+        4: res = bin0_signed ** bin1_signed;
+        default: res = 0;
+    endcase
+end
 
-    BCD_Word_Subtractor F1 (
-        .A(operand0),
-        .B(operand1),
-        .S(S_substr),
-        .Cout(Sign),
-        .Cin(0)
-    );
-
-    always @(operand0, operand1, operand0_sign, operand1_sign, operation)
-        case(operation)
-            SUM: case(signs_aux)
-                2'b00: begin //+ + +
-                    result = S_adder;
-                    Flag_aux_S = 0;
-                    Flag_aux_OV = Cout_adder;
-                end
-                2'b01: begin // + + -
-                    result = S_substr;
-                    Flag_aux_S = Sign;
-                    Flag_aux_OV = 0;
-                end
-                2'b10: begin // - + +
-                    result = S_substr; // hago + - - pero con el signo invertido
-                    Flag_aux_S = ~Sign;
-                    Flag_aux_OV = 0;
-                end
-                2'b11: begin // - + -
-                    result = S_adder; // sumo los modulos y pongo -
-                    Flag_aux_S = 1;
-                    Flag_aux_OV = Cout_adder;
-                end
-            endcase
-            SUB: case(signs_aux)
-                2'b00: begin //+ - +
-                    result = S_substr;
-                    Flag_aux_S = Sign;
-                    Flag_aux_OV = 0;                
-                end
-                2'b01: begin // + - -
-                    result = S_adder; // sumo los modulos y pongo +
-                    Flag_aux_S = 0;
-                    Flag_aux_OV = Cout_adder;
-                end
-                2'b10: begin // - - +
-                    result = S_adder; // sumo los modulos y pongo -
-                    Flag_aux_S = 1;
-                    Flag_aux_OV = Cout_adder;
-                end
-                2'b11: begin // - - -
-                    result = S_substr; // hago |A|-|B| y le cambio el signo
-                    Flag_aux_S = ~Sign;
-                    Flag_aux_OV = 0;
-                end
-            endcase
-        endcase
-
-    assign Flag_S = Flag_aux_S;
-    assign Flag_OV = Flag_aux_OV;
-
-
+bin2bcd result_mod (.bin(res), .bcd(result));
+assign result_sign = res[24];
 endmodule

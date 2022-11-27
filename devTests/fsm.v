@@ -50,6 +50,7 @@ module fsm #(
 	ALT_INPUT_OP1 = 2'b11;
 
     reg [1:0] curr_sta;
+    reg [1:0] next_sta;
     reg last_clock_keyrx;
 
     parameter NUMBER = 1, SYMBOL = 0;
@@ -71,6 +72,7 @@ module fsm #(
 
     wire keytype;
     wire [3:0] key;
+    reg [3:0] lastkey;
     keyboard keyboardMod (
         .clock(clock),
         .reset(reset),
@@ -101,7 +103,8 @@ module fsm #(
         .brightness(brightness),
         .sck(max_sck),
         .din(max_din),
-        .load(max_load)
+        .load(max_load),
+        .led_D(led5)
     );
 
     reg [DIGIT_NUM*4-1:0] operand0;
@@ -112,34 +115,39 @@ module fsm #(
     wire [DIGIT_NUM*4-1:0] result;
     wire result_sign;
     wire flag_ov;
-    wire flag_sign;
-
+    reg [3:0] operand0_dp;
+    reg [3:0] operand1_dp;
     alu aluMod (
         .operand0(operand0),    
         .operand0_sign(operand0_sign),
+        .operand0_dp(0),
         .operand1(operand1),
         .operand1_sign(operand1_sign),
+        .operand1_dp(0),
         .operation(operation),
         .result(result),
-        .result_sign(result_sign),
-        .flag_ov(flag_ov),
-        .flag_sign(flag_sign)
+        .result_sign(result_sign)
     );
 
     always @(posedge clock)
         if (!reset) begin
             // active low reset sync
             curr_sta <= LOADING_OP_0;
+            next_sta <= LOADING_OP_0;
             last_clock_keyrx <= 0;
             operand0 <= 0;
             operand1 <= 0;
             operand0_sign <= 0;
             operand1_sign <= 0;
             brightness <= 0;
-            // led2 <= 0;
+            lastkey <= 0;
+            operand0_dp <= 0;
+            operand1_dp <= 0; 
         end else begin
+            curr_sta <= next_sta;
             if(~last_clock_keyrx && valid_out) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
                 last_clock_keyrx <= 1;
+                lastkey <= key;
                 if (keytype == NUMBER) begin  // se recibio un numero
                     case (curr_sta)
                         LOADING_OP_0: begin
@@ -156,10 +164,12 @@ module fsm #(
                     endcase
                 end else begin
                     if (key == FN_BUT) begin
-                        if(curr_sta == LOADING_OP_0) curr_sta <= ALT_INPUT_OP0;
-                        else if(curr_sta == LOADING_OP_1) curr_sta <= ALT_INPUT_OP1;
-                        else if(curr_sta == ALT_INPUT_OP0) curr_sta <= LOADING_OP_0;
-                        else if(curr_sta == ALT_INPUT_OP1) curr_sta <= LOADING_OP_1;
+                        case(curr_sta)
+                        LOADING_OP_0: next_sta <= ALT_INPUT_OP0;
+                        LOADING_OP_1: next_sta <= ALT_INPUT_OP1;
+                        ALT_INPUT_OP0: next_sta <= LOADING_OP_0;
+                        ALT_INPUT_OP1: next_sta <= LOADING_OP_1;
+                        endcase
                     end else if (key == NUMERAL_BUT) begin
                         // decimal point? por ahora hago que borre
                         case (curr_sta)
@@ -173,13 +183,13 @@ module fsm #(
                                 if (curr_sta == LOADING_OP_0) begin
                                     if (operand0 != 0) begin
                                         operation <= SUM_OP;  // suma
-                                        curr_sta  <= LOADING_OP_1;  //pasar a carga del siguiente
+                                        next_sta  <= LOADING_OP_1;  //pasar a carga del siguiente
                                     end else operand0_sign <= ~operand0_sign;
                                     // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
                                 end else if (curr_sta == LOADING_OP_1) begin
                                     if (operand1 != 0) begin
                                         operand0 <= result;  // pasa resultado a op0
-                                        curr_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
+                                        next_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
 
                                         operand1 <= 0;
                                         operand1_sign <= 0;
@@ -189,15 +199,14 @@ module fsm #(
                             end
                             B_BUT: begin
                                 if (curr_sta == LOADING_OP_0) begin
-                                    // led2 <= 1;
                                     if (operand0 != 0) begin
                                         operation <= SUB_OP;  // resta
-                                        curr_sta  <= LOADING_OP_1;
+                                        next_sta  <= LOADING_OP_1;
                                     end else operand0_sign <= ~operand0_sign;
                                 end else if (curr_sta == LOADING_OP_1) begin
                                     if (operand1 != 0) begin
                                         operand0 <= result;  // pasa resultado a op0
-                                        curr_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
+                                        next_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
 
                                         operand1 <= 0;
                                         operand1_sign <= 0;
@@ -210,34 +219,38 @@ module fsm #(
                                 operand0_sign <= 0;
                                 operand1 <= 0;
                                 operand1_sign <= 0;
-                                curr_sta <= LOADING_OP_0;
+                                next_sta <= LOADING_OP_0;
                             end
                             D_BUT: begin  // Igual
                                 if (curr_sta <= LOADING_OP_1) begin
                                     operand1 <= 0;
                                     operand1_sign <= 0;
                                     // obtener resultado operando, poner en op0
-                                    curr_sta <= LOADING_OP_0;
+                                    next_sta <= LOADING_OP_0;
                                 end
                             end
                         endcase
                     end
                 end
-            end else if (~valid_out) begin
+            end else if (valid_out && (lastkey != key)) begin
                 last_clock_keyrx <= 0;
-                // led2 <= 0;
             end
+            // else if(~valid_out && !(symbol_signal || number_signal)) begin
+            //     last_clock_keyrx <= 0;
+            // end
         end
     assign disp_num = (curr_sta == LOADING_OP_1) ? operand1 : ((curr_sta == LOADING_OP_0) ? operand0 : 0);
 
-    // assign led1 = key[0];
-    // assign led6 = key[1];
-    // assign led4 = key[2];
-    // assign led3 = key[3];
+    assign led1 = operand0[0];
+    assign led6 = operand0[1];
+    assign led4 = operand0[2];
+    assign led3 = operand0[3];
 
-    assign led1 = curr_sta == LOADING_OP_0;
-    assign led6 = curr_sta == LOADING_OP_1;
-    assign led4 = curr_sta == ALT_INPUT_OP0;
-    assign led3 = curr_sta == ALT_INPUT_OP1;
-    assign led5 = keytype;
+    // assign led1 = curr_sta == LOADING_OP_0;
+    // assign led6 = curr_sta == LOADING_OP_1;
+    // assign led4 = curr_sta == ALT_INPUT_OP0;
+    // assign led3 = curr_sta == ALT_INPUT_OP1;
+    
+    assign led2 = ~result_sign;
+    // assign led5 = operand1_sign;
 endmodule

@@ -20,7 +20,15 @@ parameter [3:0] C9 = 4'b1001;
 
 //Cocmplemento a 9 de B
 // BCDSubtractor bc9calc [DIGIT_NUM-1:0]  (.A(C9), .B(B), .S(B_C9));
-				 
+// BCDSubtractor F0 (.A(C9[4*1-1 : 4*(1-1)]), .B(B[4*1-1 : 4*(1-1)]), .S(B_C9[4*1-1 : 4*(1-1)]));
+// BCDSubtractor F1 (.A(C9[4*2-1 : 4*(2-1)]), .B(B[4*2-1 : 4*(2-1)]), .S(B_C9[4*2-1 : 4*(2-1)]));
+// BCDSubtractor F2 (.A(C9[4*3-1 : 4*(3-1)]), .B(B[4*3-1 : 4*(3-1)]), .S(B_C9[4*3-1 : 4*(3-1)]));
+// BCDSubtractor F3 (.A(C9[4*4-1 : 4*(4-1)]), .B(B[4*4-1 : 4*(4-1)]), .S(B_C9[4*4-1 : 4*(4-1)]));
+// BCDSubtractor F4 (.A(C9[4*5-1 : 4*(5-1)]), .B(B[4*5-1 : 4*(5-1)]), .S(B_C9[4*5-1 : 4*(5-1)]));
+// BCDSubtractor F5 (.A(C9[4*6-1 : 4*(6-1)]), .B(B[4*6-1 : 4*(6-1)]), .S(B_C9[4*6-1 : 4*(6-1)]));
+// BCDSubtractor F6 (.A(C9[4*7-1 : 4*(7-1)]), .B(B[4*7-1 : 4*(7-1)]), .S(B_C9[4*7-1 : 4*(7-1)]));
+// BCDSubtractor F7 (.A(C9[4*8-1 : 4*(8-1)]), .B(B[4*8-1 : 4*(8-1)]), .S(B_C9[4*8-1 : 4*(8-1)]));
+
 //suma intermedia: A + B complemento a 9				 
 BCD_Word_Adder F8	(.A (A),
 				 .B (B_C9),

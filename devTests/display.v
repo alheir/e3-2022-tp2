@@ -10,7 +10,9 @@ module display (
 
     output reg sck,
     output reg din,
-    output reg load
+    output reg load,
+
+    output reg led_D
 );
 
     reg num_reg = 0;
@@ -68,8 +70,8 @@ module display (
     reg [7:0] max_addr;
     reg [7:0] max_data;
 
-    always @* begin
-        M_state_d = M_state_q;
+    always @(posedge clock) begin
+        // M_state_d <= M_state_q;
         // M_segments_d = M_segments_q;
         // M_segment_index_d = M_segment_index_q;
 
@@ -79,19 +81,18 @@ module display (
 
         starting = 1'b1;
 
-
         case (M_state_q)
             IDLE_state: begin
                 rst <= 1'b0;
                 M_segment_index_d = 1'h0;
-                M_state_d = SEND_RESET_state;
+                M_state_d <= SEND_RESET_state;
             end
             SEND_RESET_state: begin
                 M_max_start = 1'h01;
                 max_addr = 8'h0c;
                 max_data = 8'h01;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_MAX_INTENSITY_state;
+                    M_state_d <= SEND_MAX_INTENSITY_state;
                 end
             end
             SEND_INTENSITY_state: begin
@@ -99,15 +100,15 @@ module display (
                 max_addr = 8'h0a;
                 max_data = 8'h01;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_NO_DECODE_state;
+                    M_state_d <= SEND_NO_DECODE_state;
                 end
             end
             SEND_NO_DECODE_state: begin
                 M_max_start = 1'h01;
                 max_addr = 8'h09;
-                max_data = 8'h07;
+                max_data = 8'hff;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_ALL_DIGITS_state;
+                    M_state_d <= SEND_ALL_DIGITS_state;
                 end
             end
             SEND_ALL_DIGITS_state: begin
@@ -115,15 +116,18 @@ module display (
                 max_addr = 8'h0b;
                 max_data = 8'hff;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG0;
+                    M_state_d <= SEND_DIG0;
                 end
             end
             SEND_DIG0: begin
                 M_max_start = 1'h01;
-                max_addr = 8'h1;
+                max_addr = 8'h01;
                 max_data = 8'h00;
+                led_D <= 1;
+                
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG1;
+                    M_state_d <= SEND_DIG1;
+                  
                 end
             end
             SEND_DIG1: begin
@@ -131,7 +135,7 @@ module display (
                 max_addr = 8'h01;
                 max_data = 8'h01;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG2;
+                    M_state_d <= SEND_DIG2;
                 end
             end
             SEND_DIG2: begin
@@ -139,7 +143,7 @@ module display (
                 max_addr = 8'h03;
                 max_data = 8'h02;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG3;
+                    M_state_d <= SEND_DIG3;
                 end
             end
             SEND_DIG3: begin
@@ -147,7 +151,7 @@ module display (
                 max_addr = 8'h04;
                 max_data = 8'h03;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG4;
+                    M_state_d <= SEND_DIG4;
                 end
             end
             SEND_DIG4: begin
@@ -155,7 +159,7 @@ module display (
                 max_addr = 8'h05;
                 max_data = 8'h04;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG5;
+                    M_state_d <= SEND_DIG5;
                 end
             end
             SEND_DIG5: begin
@@ -163,7 +167,7 @@ module display (
                 max_addr = 8'h06;
                 max_data = 8'h05;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG6;
+                    M_state_d <= SEND_DIG6;
                 end
             end
             SEND_DIG6: begin
@@ -171,7 +175,7 @@ module display (
                 max_addr = 8'h07;
                 max_data = 8'h06;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = SEND_DIG7;
+                    M_state_d <= SEND_DIG7;
                 end
             end
             SEND_DIG7: begin
@@ -179,10 +183,11 @@ module display (
                 max_addr = 8'd8;
                 max_data = 8'h07;
                 if (M_max_busy != 1'h1) begin
-                    M_state_d = NO_OP_state;
+                    M_state_d <= NO_OP_state;
                     starting  = 0;
                 end
             end
+            // default: M_state_d <= IDLE_state;
         endcase
 
         M_max_addr_in <= max_addr;
@@ -213,6 +218,7 @@ module display (
             // M_segments_q <= 1'h0;
             M_segment_index_q <= 1'h0;
             M_state_q <= 1'h0;
+            M_state_d <= 1'h0;
         end else begin
             M_segments_q <= M_segments_d;
             // M_segment_index_q <= M_segment_index_d;
@@ -331,7 +337,7 @@ endmodule
 //     reg [7:0] max_data;
 
 //     always @* begin
-//         M_state_d = M_state_q;
+//         M_state_d <= M_state_q;
 //         // M_segments_d = M_segments_q;
 //         // M_segment_index_d = M_segment_index_q;
 
@@ -346,14 +352,14 @@ endmodule
 //             IDLE_state: begin
 //                 rst <= 1'b0;
 //                 M_segment_index_d = 1'h0;
-//                 M_state_d = SEND_RESET_state;
+//                 M_state_d <= SEND_RESET_state;
 //             end
 //             SEND_RESET_state: begin
 //                 M_max_start = 1'h01;
 //                 max_addr = 8'h0c;
 //                 max_data = 8'h01;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_MAX_INTENSITY_state;
+//                     M_state_d <= SEND_MAX_INTENSITY_state;
 //                 end
 //             end
 //             SEND_INTENSITY_state: begin
@@ -361,7 +367,7 @@ endmodule
 //                 max_addr = 8'h0a;
 //                 max_data = 8'h07;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_NO_DECODE_state;
+//                     M_state_d <= SEND_NO_DECODE_state;
 //                 end
 //             end
 //             SEND_NO_DECODE_state: begin
@@ -369,7 +375,7 @@ endmodule
 //                 max_addr = 8'h09;
 //                 max_data = 8'h01;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_ALL_DIGITS_state;
+//                     M_state_d <= SEND_ALL_DIGITS_state;
 //                 end
 //             end
 //             SEND_ALL_DIGITS_state: begin
@@ -377,7 +383,7 @@ endmodule
 //                 max_addr = 8'h0b;
 //                 max_data = 8'hff;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG0;
+//                     M_state_d <= SEND_DIG0;
 //                 end
 //             end
 //             SEND_DIG0: begin
@@ -385,7 +391,7 @@ endmodule
 //                 max_addr = 8'h1;
 //                 max_data = 8'h00;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG1;
+//                     M_state_d <= SEND_DIG1;
 //                 end
 //             end
 //             SEND_DIG1: begin
@@ -393,7 +399,7 @@ endmodule
 //                 max_addr = 8'h01;
 //                 max_data = 8'h01;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG2;
+//                     M_state_d <= SEND_DIG2;
 //                 end
 //             end
 //             SEND_DIG2: begin
@@ -401,7 +407,7 @@ endmodule
 //                 max_addr = 8'h03;
 //                 max_data = 8'h02;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG3;
+//                     M_state_d <= SEND_DIG3;
 //                 end
 //             end
 //             SEND_DIG3: begin
@@ -409,7 +415,7 @@ endmodule
 //                 max_addr = 8'h04;
 //                 max_data = 8'h03;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG4;
+//                     M_state_d <= SEND_DIG4;
 //                 end
 //             end
 //             SEND_DIG4: begin
@@ -417,7 +423,7 @@ endmodule
 //                 max_addr = 8'h05;
 //                 max_data = 8'h04;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG5;
+//                     M_state_d <= SEND_DIG5;
 //                 end
 //             end
 //             SEND_DIG5: begin
@@ -425,7 +431,7 @@ endmodule
 //                 max_addr = 8'h06;
 //                 max_data = 8'h05;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG6;
+//                     M_state_d <= SEND_DIG6;
 //                 end
 //             end
 //             SEND_DIG6: begin
@@ -433,7 +439,7 @@ endmodule
 //                 max_addr = 8'h07;
 //                 max_data = 8'h06;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = SEND_DIG7;
+//                     M_state_d <= SEND_DIG7;
 //                 end
 //             end
 //             SEND_DIG7: begin
@@ -441,7 +447,7 @@ endmodule
 //                 max_addr = 8'd8;
 //                 max_data = 8'h07;
 //                 if (M_max_busy != 1'h1) begin
-//                     M_state_d = NO_OP_state;
+//                     M_state_d <= NO_OP_state;
 //                     starting  = 0;
 //                 end
 //             end

@@ -28,11 +28,11 @@ module keyboard (
 	input wire [1:0] row_result,
 	input wire valid_out,
 	input wire symbol_signal,
-	input wire number_signal,	 
-	input wire enable,				 
-	output reg keytype,			 
+	input wire number_signal,
+	input wire enable,
+	output reg keytype,	 
 	output reg [3:0] key,
-	output reg [1:0] col_selector,	 
+	output reg [1:0] col_selector,
 );
 												
 reg [1:0] acthi_col_selector;
@@ -85,7 +85,7 @@ always @ (posedge clock)
 	// 	key <= 0;
 	// end
 	// else
-		acthi_col_selector <= acthi_col_selector + 1; // rota columnas
+	acthi_col_selector <= acthi_col_selector + 1; // rota columnas
 	
 always @ (negedge clock)
 	if(reset) begin

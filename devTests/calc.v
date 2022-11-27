@@ -55,6 +55,49 @@ module calc (
     output wire led_red
 );
 
+    wire sw1;
+    wire sw2;
+    wire sw3;
+    wire sw4;
+    wire sw5;
+
+    // SB_IO #(
+    //     .PIN_TYPE(6'b0000_01),
+    //     .PULLUP  (1'b1)
+    // ) button_input (
+    //     .PACKAGE_PIN(pin_SW1),
+    //     .D_IN_0(sw1)
+    // );
+    // SB_IO #(
+    //     .PIN_TYPE(6'b0000_01),
+    //     .PULLUP  (1'b1)
+    // ) button_input (
+    //     .PACKAGE_PIN(pin_SW2),
+    //     .D_IN_0(sw2)
+    // );
+    // SB_IO #(
+    //     .PIN_TYPE(6'b0000_01),
+    //     .PULLUP  (1'b1)
+    // ) button_input (
+    //     .PACKAGE_PIN(pin_SW3),
+    //     .D_IN_0(s3)
+    // );
+    // SB_IO #(
+    //     .PIN_TYPE(6'b0000_01),
+    //     .PULLUP  (1'b1)
+    // ) button_input (
+    //     .PACKAGE_PIN(pin_SW4),
+    //     .D_IN_0(sw4)
+    // );
+    // SB_IO #(
+    //     .PIN_TYPE(6'b0000_01),
+    //     .PULLUP  (1'b1)
+    // ) button_input (
+    //     .PACKAGE_PIN(pin_SW5),
+    //     .D_IN_0(sw5)
+    // );
+
+
 
     // Clock settings
     wire clock;
@@ -77,7 +120,7 @@ module calc (
 
     fsm calcFsm (
         .clock(clock),
-        .reset(pin_reset),//pin_reset),
+        .reset(pin_reset), //pin_reset),
 
         .row_result({pin_kb_Q1, pin_kb_Q0}),
         .valid_out(pin_kb_OUT),
