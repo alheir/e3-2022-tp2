@@ -70,6 +70,9 @@ module fsm #(
 	NUMERAL_BUT = 4'hE,
 	FN_BUT = 4'hF;
 
+    parameter [3:0] BLANK = 4'hF;
+    parameter [4*DIGIT_NUM-1:0] BLANK_NUM = DIGIT_NUM{BLANK};
+
     wire keytype;
     wire [3:0] key;
     reg [3:0] lastkey;
@@ -109,8 +112,17 @@ module fsm #(
 
     reg [DIGIT_NUM*4-1:0] operand0;
     reg operand0_sign;
+    reg operand0_dped;
     reg [DIGIT_NUM*4-1:0] operand1;
     reg operand1_sign;
+    reg operand1_dped;
+
+    wire [1:0] operands = {operand1, operand0};
+    wire [1:0] operand_signs = {operand1_sign, operand0_sign};
+    wire [1:0] operand_dps = {operand1_dp, operand0_dp};
+    wire [1:0] operand_dpeds = {operand1_dped, operand0_dped};
+    wire is_loading_operand = (curr_sta == LOADING_OP_0) || (curr_sta == LOADING_OP_1);
+
     reg [2:0] operation;
     wire [DIGIT_NUM*4-1:0] result;
     wire result_sign;
@@ -137,14 +149,16 @@ module fsm #(
             curr_sta <= LOADING_OP_0;
             next_sta <= LOADING_OP_0;
             last_clock_keyrx <= 0;
-            operand0 <= 0;
-            operand1 <= 0;
+            operand0 <= BLANK_NUM;
+            operand1 <= BLANK_NUM;
             operand0_sign <= 0;
             operand1_sign <= 0;
             brightness <= 0;
             lastkey <= 0;
             operand0_dp <= 0;
+            operand0_dped <= 0;
             operand1_dp <= 0;
+            operand1_dped <= 0;
         end else begin
             curr_sta <= next_sta;
             if(~last_clock_keyrx && valid_out) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
@@ -152,14 +166,21 @@ module fsm #(
                 lastkey <= key;
                 if (keytype == NUMBER) begin  // se recibio un numero
                     case (curr_sta)
-                        LOADING_OP_0: begin
-                            operand0 = operand0 << 4;
-                            operand0[3:0] = key;
-                        end
-                        LOADING_OP_1: begin
+                        LOADING_OP_0, LOADING_OP_1: begin
                             operand1 = operand1 << 4;
                             operand1[3:0] = key;
+                            if(operand1_dped) operand1_dp = operand1_dp + 1;
                         end
+                        // LOADING_OP_0: begin
+                        //     operand0 = operand0 << 4;
+                        //     operand0[3:0] = key;
+                        //     if(operand0_dped) operand0_dp = operand0_dp + 1;
+                        // end
+                        // LOADING_OP_1: begin
+                        //     operand1 = operand1 << 4;
+                        //     operand1[3:0] = key;
+                        //     if(operand1_dped) operand1_dp = operand1_dp + 1;
+                        // end
                         ALT_INPUT_OP0, ALT_INPUT_OP1: begin  // esta en menu alternativo
                             if (key < 8) begin
                                 brightness <= key << 1; // multiplica por 2 el valor ingresado, entre 0 y 7
@@ -307,3 +328,9 @@ module fsm #(
 
     // assign led5 = operand1_sign;
 endmodule
+
+
+/*
+Código para el punto decimal
+*/
+operand0_dped <= 1;
