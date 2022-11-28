@@ -23,7 +23,7 @@
 //   and may be overwritten
 //{module {calc}}
 module calc #(
-    parameter CLK_DIV = 4
+    parameter CLK_DIV = 8
 ) (
     input wire pin_kb_Q0,    //Q0
     input wire pin_kb_Q1,    //Q1

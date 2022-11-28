@@ -52,8 +52,8 @@ module alu #(
     wire [24:0] prod_res;
     // wire [24:0] bin0_signed = (operand0_sign ? -bin0 : bin0) / (10 ** operand0_dp);
     // wire [24:0] bin1_signed = (operand1_sign ? -bin1 : bin1) / (10 ** operand1_dp);
-    wire [24:0] bin0_signed = (operand0_sign ? -bin0 : bin0);
-    wire [24:0] bin1_signed = (operand1_sign ? -bin1 : bin1);
+    wire [15:0] bin0_signed = (operand0_sign ? -bin0 : bin0);
+    wire [15:0] bin1_signed = (operand1_sign ? -bin1 : bin1);
 
     bcd2bin operand1_i (
         .num(operand0),

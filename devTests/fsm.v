@@ -92,6 +92,7 @@ module fsm #(
     );
 
     reg disp_latch;
+    reg disp_mode;
     reg [2:0] dp_pos;
     reg [3:0] disp_codes;
     reg [3:0] brightness;
@@ -101,9 +102,9 @@ module fsm #(
         .clock(clock),
         .reset(reset),
         .latch(disp_latch),  //to read or not to read, that is the question?
-        .mode(disp_mode),  // 0: numbers, 1: codes
+        .mode(0),  // 0: numbers, 1: codes
         .dp(dp_pos),  // 111 -> DP en el MSD | 000 -> DP en el LSD
-        .code(disp_codes), // Cï¿½digos hardcodados a definir. Para printear o hacer cosas ya definidas dentroï¿½delï¿½mï¿½dulo	
+        .code(0), // Cï¿½digos hardcodados a definir. Para printear o hacer cosas ya definidas dentroï¿½delï¿½mï¿½dulo	
         .num(disp_num),
         .brightness(brightness),
         .sck(max_sck),
@@ -182,7 +183,8 @@ module fsm #(
                         // end
                         ALT_INPUT_OP0, ALT_INPUT_OP1: begin  // esta en menu alternativo
                             if (key < 8) begin
-                                brightness <= key << 1; // multiplica por 2 el valor ingresado, entre 0 y 7
+                                // brightness <= key << 1; // multiplica por 2 el valor ingresado, entre 0 y 7
+                                brightness <= key;
                             end
                         end
                     endcase
