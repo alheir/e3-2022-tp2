@@ -104,7 +104,7 @@ module fsm #(
         .sck(max_sck),
         .din(max_din),
         .cs(max_cs),
-        .led_D5(led5)
+        // .led_D5(led5)
     );
 
     reg [DIGIT_NUM*4-1:0] operand0;
@@ -114,9 +114,10 @@ module fsm #(
     reg [2:0] operation;
     wire [DIGIT_NUM*4-1:0] result;
     wire result_sign;
+    wire [2:0] result_dp;
     wire flag_ov;
-    reg [3:0] operand0_dp;
-    reg [3:0] operand1_dp;
+    reg [2:0] operand0_dp;
+    reg [2:0] operand1_dp;
     alu aluMod (
         .operand0(operand0),
         .operand0_sign(operand0_sign),
@@ -126,7 +127,8 @@ module fsm #(
         .operand1_dp(0),
         .operation(operation),
         .result(result),
-        .result_sign(result_sign)
+        .result_sign(result_sign),
+        .result_dp(result_dp)
     );
 
     always @(posedge clock)
@@ -158,9 +160,11 @@ module fsm #(
                             operand1 = operand1 << 4;
                             operand1[3:0] = key;
                         end
-                        ALT_INPUT_OP0, ALT_INPUT_OP1:  // esta en menu alternativo
-                        if (key < 8)
-                            brightness <= key << 1; // multiplica por 2 el valor ingresado, entre 0 y 7
+                        ALT_INPUT_OP0, ALT_INPUT_OP1: begin  // esta en menu alternativo
+                            if (key < 8) begin
+                                brightness <= key << 1; // multiplica por 2 el valor ingresado, entre 0 y 7
+                            end
+                        end
                     endcase
                 end else begin
                     if (key == FN_BUT) begin
@@ -190,12 +194,24 @@ module fsm #(
                                     if (operand1 != 0) begin
                                         operand0 <= result;  // pasa resultado a op0
                                         next_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
-
                                         operand1 <= 0;
                                         operand1_sign <= 0;
                                     end else operand1_sign <= ~operand1_sign;
                                     // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
                                 end
+                                // else if (curr_sta == ALT_INPUT_OP0) begin
+                                //     if (operand0 != 0) begin
+                                //         operation <= MUL_OP;  // producto
+                                //         next_sta  <= LOADING_OP_1;
+                                //     end else operand0_sign <= ~operand0_sign;
+                                // end else if (curr_sta == ALT_INPUT_OP2) begin
+                                //     if (operand1 != 0) begin
+                                //         operand0 <= result;
+                                //         next_sta <= LOADING_OP_0;
+                                //         operand1 <= 0;
+                                //         operand1_sign <= 0;
+                                //     end else operand1_sign <= ~operand1_sign;
+                                // end
                             end
                             B_BUT: begin
                                 if (curr_sta == LOADING_OP_0) begin
@@ -212,20 +228,50 @@ module fsm #(
                                         operand1_sign <= 0;
                                     end else operand1_sign <= ~operand1_sign;
                                     // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
+                                end else if (curr_sta == ALT_INPUT_OP0) begin
+                                    if (operand0 != 0) begin
+                                        operation <= DIV_OP;  // cociente
+                                        next_sta  <= LOADING_OP_1;
+                                    end else operand0_sign <= ~operand0_sign;
+                                end else if (curr_sta == ALT_INPUT_OP2) begin
+                                    if (operand1 != 0) begin
+                                        operand0 <= result;
+                                        next_sta <= LOADING_OP_0;
+                                        operand1 <= 0;
+                                        operand1_sign <= 0;
+                                    end else operand1_sign <= ~operand1_sign;
                                 end
                             end
                             C_BUT: begin  // Clear
-                                operand0 <= 0;
-                                operand0_sign <= 0;
-                                operand1 <= 0;
-                                operand1_sign <= 0;
-                                next_sta <= LOADING_OP_0;
+                                if (curr_sta == LOADING_OP_0 || curr_sta == LOADING_OP_1) begin
+                                    operand0 <= 0;
+                                    operand0_sign <= 0;
+                                    operand1 <= 0;
+                                    operand1_sign <= 0;
+                                    next_sta <= LOADING_OP_0;
+                                end
+                                // else if (curr_sta == ALT_INPUT_OP0) begin
+                                //     if (operand0 != 0) begin
+                                //         operation <= EXP_OP;  // potencia
+                                //         next_sta  <= LOADING_OP_1;
+                                //     end else operand0_sign <= ~operand0_sign;
+                                // end else if (curr_sta == ALT_INPUT_OP2) begin
+                                //     if (operand1 != 0) begin
+                                //         operand0 <= result;
+                                //         next_sta <= LOADING_OP_0;
+                                //         operand1 <= 0;
+                                //         operand1_sign <= 0;
+                                //     end else operand1_sign <= ~operand1_sign;
+                                // end
+
                             end
                             D_BUT: begin  // Igual
                                 if (curr_sta <= LOADING_OP_1) begin
                                     operand1 <= 0;
                                     operand1_sign <= 0;
                                     // obtener resultado operando, poner en op0
+                                    operand0 <= result;
+                                    operand0_sign <= result_sign;
                                     next_sta <= LOADING_OP_0;
                                 end
                             end
@@ -240,17 +286,24 @@ module fsm #(
             // end
         end
     assign disp_num = (curr_sta == LOADING_OP_1) ? operand1 : ((curr_sta == LOADING_OP_0) ? operand0 : 0);
+    // assign disp_num = (curr_sta == LOADING_OP_1) ? operand1 : ((curr_sta == LOADING_OP_0) ? operand0 : result);
+    // assign disp_num[31:16] = operand1;
+    // assign disp_num[15:0] = operand0;
+    // assign disp_num = result;
 
-    assign led1 = operand0[0];
-    assign led6 = operand0[1];
-    assign led4 = operand0[2];
-    assign led3 = operand0[3];
+    // assign led1 = operand0[0];
+    // assign led6 = operand0[1];
+    // assign led4 = operand0[2];
+    // assign led3 = operand0[3];
+
+    assign {led3, led4, led6, led1} = result[3:0];
+    assign led5 = operand0_sign;
+    assign led2 = operand1_sign;
 
     // assign led1 = curr_sta == LOADING_OP_0;
     // assign led6 = curr_sta == LOADING_OP_1;
     // assign led4 = curr_sta == ALT_INPUT_OP0;
     // assign led3 = curr_sta == ALT_INPUT_OP1;
 
-    assign led2 = ~result_sign;
     // assign led5 = operand1_sign;
 endmodule

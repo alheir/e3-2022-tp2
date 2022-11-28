@@ -2714,6 +2714,8 @@
     (effects (font (size 1 1) (thickness 0.15)))
   )
 
+  (segment (start 232.755 67.655) (end 233.68 67.655) (width 0.25) (layer "B.Cu") (net 0) (tstamp 1aa6a0c8-8127-4690-9a8e-e20d05cbfc77))
+  (segment (start 231.14 66.04) (end 232.755 67.655) (width 0.25) (layer "B.Cu") (net 0) (tstamp b55f2e3a-ec5b-4a93-9073-013269afe60a))
   (segment (start 182.88 100.33) (end 188.595 100.33) (width 1) (layer "B.Cu") (net 4) (tstamp 0417bcda-69ac-4baa-8667-b7d1abeb9909))
   (segment (start 191.77 97.155) (end 194.36 97.155) (width 1) (layer "B.Cu") (net 4) (tstamp 0836bc72-bf68-44b9-89a7-ea2eb9cfd03f))
   (segment (start 188.595 100.33) (end 191.77 97.155) (width 1) (layer "B.Cu") (net 4) (tstamp 5945c939-f807-4edd-91c6-b99a2c2efe85))

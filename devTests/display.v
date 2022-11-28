@@ -12,7 +12,7 @@ module display (
     output reg din,
     output reg cs,
 
-    output reg led_D5
+    // output reg led_D5
 );
 
     reg max_rst = 1'b1;
@@ -180,6 +180,6 @@ module display (
         end
     end
 
-    assign led_D5 = started;
+    // assign led_D5 = started;
 
 endmodule  // display

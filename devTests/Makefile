@@ -15,7 +15,7 @@ ifeq ($(uname_S), Windows)
 endif
 
 ifeq ($(uname_S), Linux)
-    APIOPKGFOLDER = $${HOME}/.apio	# Direccion a la carpeta .apio (usualmente en la carpeta del usuario)
+    APIOPKGFOLDER = $${HOME}/.apio# Direccion a la carpeta .apio (usualmente en la carpeta del usuario)
 	OSSCAD_LIB_IVL = "$(APIOPKGFOLDER)/packages/tools-oss-cad-suite/lib/ivl"
 	OSSCAD_ICE40_PREDEFMODULES = "$(APIOPKGFOLDER)/packages/tools-oss-cad-suite/share/yosys/ice40/cells_sim.v"
 endif
