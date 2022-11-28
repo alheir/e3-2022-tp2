@@ -33,9 +33,11 @@ module keyboard (
 	output reg keytype,	 
 	output reg [3:0] key,
 	output reg [1:0] col_selector,
+	output reg valid_iteration
 );
 												
 reg [1:0] acthi_col_selector;
+reg row_detected;
 
 parameter [3:0]
 	ZERO_VAL = 4'd0,
@@ -86,10 +88,12 @@ always @ (posedge clock)
 	// end
 	// else
 	acthi_col_selector <= acthi_col_selector + 1; // rota columnas
+	if(acthi_col_selector <= 2'b00) valid_iteration <= 0;
 	
 always @ (negedge clock)
 	if(reset) begin
 		if(valid_out) begin
+			valid_iteration <= 1;
 			case(acthi_col_selector)
 				2'b00:
 					case(row_result)

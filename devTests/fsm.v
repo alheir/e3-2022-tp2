@@ -76,6 +76,7 @@ module fsm #(
     wire keytype;
     wire [3:0] key;
     reg [3:0] lastkey;
+    wire valid_iteration;
     keyboard keyboardMod (
         .clock(clock),
         .reset(reset),
@@ -86,14 +87,15 @@ module fsm #(
         .enable(0),
         .keytype(keytype),
         .key(key),
-        .col_selector(col_selector)
+        .col_selector(col_selector),
+        .valid_iteration(valid_iteration)
     );
 
     reg disp_latch;
     reg [2:0] dp_pos;
     reg [3:0] disp_codes;
     reg [3:0] brightness;
-    reg [DIGIT_NUM*4-1:0] disp_num;
+    reg [DIGIT_NUM*4-1:0] disp_num = curr_operand;
 
     display displayMod (
         .clock(clock),
@@ -122,6 +124,7 @@ module fsm #(
     wire [1:0] operand_dps = {operand1_dp, operand0_dp};
     wire [1:0] operand_dpeds = {operand1_dped, operand0_dped};
     wire is_loading_operand = (curr_sta == LOADING_OP_0) || (curr_sta == LOADING_OP_1);
+    wire curr_operand = (curr_sta == LOADING_OP_1) || (curr_sta == ALT_INPUT_OP1);
 
     reg [2:0] operation;
     wire [DIGIT_NUM*4-1:0] result;
@@ -149,27 +152,23 @@ module fsm #(
             curr_sta <= LOADING_OP_0;
             next_sta <= LOADING_OP_0;
             last_clock_keyrx <= 0;
-            operand0 <= BLANK_NUM;
-            operand1 <= BLANK_NUM;
-            operand0_sign <= 0;
-            operand1_sign <= 0;
+            operands <= 2{BLANK_NUM};
+            operand_signs <= 2{0};
             brightness <= 0;
             lastkey <= 0;
-            operand0_dp <= 0;
-            operand0_dped <= 0;
-            operand1_dp <= 0;
-            operand1_dped <= 0;
+            operand_dps <= 2{0};
+            operand_dpeds <= 2{0};
         end else begin
             curr_sta <= next_sta;
-            if(~last_clock_keyrx && valid_out) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
+            if(~last_clock_keyrx && valid_iteration) begin // se recibio una nueva tecla (por lo menos 1clk sin presion valida)
                 last_clock_keyrx <= 1;
                 lastkey <= key;
                 if (keytype == NUMBER) begin  // se recibio un numero
                     case (curr_sta)
                         LOADING_OP_0, LOADING_OP_1: begin
-                            operand1 = operand1 << 4;
-                            operand1[3:0] = key;
-                            if(operand1_dped) operand1_dp = operand1_dp + 1;
+                            operands[curr_operand] = operands[curr_operand] << 4;
+                            operands[curr_operand][3:0] = key;
+                            if(operand_dpeds[curr_operand]) operand_dps[curr_operand] = operand_dps[curr_operand] + 1;
                         end
                         // LOADING_OP_0: begin
                         //     operand0 = operand0 << 4;
@@ -196,117 +195,114 @@ module fsm #(
                             ALT_INPUT_OP1: next_sta <= LOADING_OP_1;
                         endcase
                     end else if (key == NUMERAL_BUT) begin
-                        // decimal point? por ahora hago que borre
+                        if(LOADING_OP_0): begin
+                            operand0_dped <= 1;
+                            operand0_dp <= 0;
+                        end else if(LOADING_OP_1): begin
+                            operand1_dped <= 1;
+                            operand1_dp <= 0;
+                        end
+                    end else if(key == A_BUT) begin
+        //TODO: ESTO ES HORRIBLE, SE DEBE PODER MEJORAR Y HACER PARA CUALQUIER OPERANDO
+                        if (curr_sta == LOADING_OP_0) begin
+                            if (operand0 != 0) begin
+                                operation <= SUM_OP;  // suma
+                                next_sta  <= LOADING_OP_1;  //pasar a carga del siguiente
+                            end else operand0_sign <= ~operand0_sign;
+                            // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
+                        end else if (curr_sta == LOADING_OP_1) begin
+                            if (operand1 != 0) begin
+                                operand0 <= result;  // pasa resultado a op0
+                                next_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
+                                operand1 <= 0;
+                                operand1_sign <= 0;
+                            end else operand1_sign <= ~operand1_sign;
+                            // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
+                        end
+                        // else if (curr_sta == ALT_INPUT_OP0) begin
+                        //     if (operand0 != 0) begin
+                        //         operation <= MUL_OP;  // producto
+                        //         next_sta  <= LOADING_OP_1;
+                        //     end else operand0_sign <= ~operand0_sign;
+                        // end else if (curr_sta == ALT_INPUT_OP2) begin
+                        //     if (operand1 != 0) begin
+                        //         operand0 <= result;
+                        //         next_sta <= LOADING_OP_0;
+                        //         operand1 <= 0;
+                        //         operand1_sign <= 0;
+                        //     end else operand1_sign <= ~operand1_sign;
+                        // end
+                    end else if(key == B_BUT) begin
+                        if (curr_sta == LOADING_OP_0) begin
+                            if (operand0 != 0) begin
+                                operation <= SUB_OP;  // resta
+                                next_sta  <= LOADING_OP_1;
+                            end else operand0_sign <= ~operand0_sign;
+                        end else if (curr_sta == LOADING_OP_1) begin
+                            if (operand1 != 0) begin
+                                operand0 <= result;  // pasa resultado a op0
+                                next_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
+
+                                operand1 <= 0;
+                                operand1_sign <= 0;
+                            end else operand1_sign <= ~operand1_sign;
+                            // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
+                        end else if (curr_sta == ALT_INPUT_OP0) begin
+                            if (operand0 != 0) begin
+                                operation <= DIV_OP;  // cociente
+                                next_sta  <= LOADING_OP_1;
+                            end else operand0_sign <= ~operand0_sign;
+                        end else if (curr_sta == ALT_INPUT_OP2) begin
+                            if (operand1 != 0) begin
+                                operand0 <= result;
+                                next_sta <= LOADING_OP_0;
+                                operand1 <= 0;
+                                operand1_sign <= 0;
+                            end else operand1_sign <= ~operand1_sign;
+                        end
+                    end else if(key == C_BUT) begin
                         case (curr_sta)
-                            LOADING_OP_0: operand0 = {0, 0, 0, 0, operand0[4*DIGIT_NUM-1:4]};
-                            LOADING_OP_1: operand1 = {0, 0, 0, 0, operand1[4*DIGIT_NUM-1:4]};
-                        endcase
-                    end else begin
-                        case (key)
-                            //TODO: ESTO ES HORRIBLE, SE DEBE PODER MEJORAR Y HACER PARA CUALQUIER OPERANDO
-                            A_BUT: begin
-                                if (curr_sta == LOADING_OP_0) begin
-                                    if (operand0 != 0) begin
-                                        operation <= SUM_OP;  // suma
-                                        next_sta  <= LOADING_OP_1;  //pasar a carga del siguiente
-                                    end else operand0_sign <= ~operand0_sign;
-                                    // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
-                                end else if (curr_sta == LOADING_OP_1) begin
-                                    if (operand1 != 0) begin
-                                        operand0 <= result;  // pasa resultado a op0
-                                        next_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
-                                        operand1 <= 0;
-                                        operand1_sign <= 0;
-                                    end else operand1_sign <= ~operand1_sign;
-                                    // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
-                                end
-                                // else if (curr_sta == ALT_INPUT_OP0) begin
-                                //     if (operand0 != 0) begin
-                                //         operation <= MUL_OP;  // producto
-                                //         next_sta  <= LOADING_OP_1;
-                                //     end else operand0_sign <= ~operand0_sign;
-                                // end else if (curr_sta == ALT_INPUT_OP2) begin
-                                //     if (operand1 != 0) begin
-                                //         operand0 <= result;
-                                //         next_sta <= LOADING_OP_0;
-                                //         operand1 <= 0;
-                                //         operand1_sign <= 0;
-                                //     end else operand1_sign <= ~operand1_sign;
-                                // end
+                            LOADING_OP_0: begin 
+                                operand0 = {0, 0, 0, 0, operand0[4*DIGIT_NUM-1:4]};
+                                operand0_dp <= operand0_dp - 1;
                             end
-                            B_BUT: begin
-                                if (curr_sta == LOADING_OP_0) begin
-                                    if (operand0 != 0) begin
-                                        operation <= SUB_OP;  // resta
-                                        next_sta  <= LOADING_OP_1;
-                                    end else operand0_sign <= ~operand0_sign;
-                                end else if (curr_sta == LOADING_OP_1) begin
-                                    if (operand1 != 0) begin
-                                        operand0 <= result;  // pasa resultado a op0
-                                        next_sta <= LOADING_OP_0; //muestra y permite modificar el resultado
-
-                                        operand1 <= 0;
-                                        operand1_sign <= 0;
-                                    end else operand1_sign <= ~operand1_sign;
-                                    // MARCAR EL SIGNO DEL OPERANDO EN ALGUN LED
-                                end else if (curr_sta == ALT_INPUT_OP0) begin
-                                    if (operand0 != 0) begin
-                                        operation <= DIV_OP;  // cociente
-                                        next_sta  <= LOADING_OP_1;
-                                    end else operand0_sign <= ~operand0_sign;
-                                end else if (curr_sta == ALT_INPUT_OP2) begin
-                                    if (operand1 != 0) begin
-                                        operand0 <= result;
-                                        next_sta <= LOADING_OP_0;
-                                        operand1 <= 0;
-                                        operand1_sign <= 0;
-                                    end else operand1_sign <= ~operand1_sign;
-                                end
-                            end
-                            C_BUT: begin  // Clear
-                                if (curr_sta == LOADING_OP_0 || curr_sta == LOADING_OP_1) begin
-                                    operand0 <= 0;
-                                    operand0_sign <= 0;
-                                    operand1 <= 0;
-                                    operand1_sign <= 0;
-                                    next_sta <= LOADING_OP_0;
-                                end
-                                // else if (curr_sta == ALT_INPUT_OP0) begin
-                                //     if (operand0 != 0) begin
-                                //         operation <= EXP_OP;  // potencia
-                                //         next_sta  <= LOADING_OP_1;
-                                //     end else operand0_sign <= ~operand0_sign;
-                                // end else if (curr_sta == ALT_INPUT_OP2) begin
-                                //     if (operand1 != 0) begin
-                                //         operand0 <= result;
-                                //         next_sta <= LOADING_OP_0;
-                                //         operand1 <= 0;
-                                //         operand1_sign <= 0;
-                                //     end else operand1_sign <= ~operand1_sign;
-                                // end
-
-                            end
-                            D_BUT: begin  // Igual
-                                if (curr_sta <= LOADING_OP_1) begin
-                                    operand1 <= 0;
-                                    operand1_sign <= 0;
-                                    // obtener resultado operando, poner en op0
-                                    operand0 <= result;
-                                    operand0_sign <= result_sign;
-                                    next_sta <= LOADING_OP_0;
-                                end
+                            LOADING_OP_1: begin
+                                operand1 = {0, 0, 0, 0, operand1[4*DIGIT_NUM-1:4]};
+                                operand1_dp <= operand1_dp - 1;
                             end
                         endcase
+                        // else if (curr_sta == ALT_INPUT_OP0) begin
+                        //     if (operand0 != 0) begin
+                        //         operation <= EXP_OP;  // potencia
+                        //         next_sta  <= LOADING_OP_1;
+                        //     end else operand0_sign <= ~operand0_sign;
+                        // end else if (curr_sta == ALT_INPUT_OP2) begin
+                        //     if (operand1 != 0) begin
+                        //         operand0 <= result;
+                        //         next_sta <= LOADING_OP_0;
+                        //         operand1 <= 0;
+                        //         operand1_sign <= 0;
+                        //     end else operand1_sign <= ~operand1_sign;
+                        // end
+
+                    end else if(key == D_BUT) begin  // Igual
+                        if (curr_sta <= LOADING_OP_1) begin
+                            operand1 <= 0;
+                            operand1_sign <= 0;
+                            // obtener resultado operando, poner en op0
+                            operand0 <= result;
+                            operand0_sign <= result_sign;
+                            next_sta <= LOADING_OP_0;
+                        end
                     end
                 end
-            end else if (valid_out && (lastkey != key)) begin
+            end else // if (valid_iteration && (lastkey != key)) begin
                 last_clock_keyrx <= 0;
-            end
-            // else if(~valid_out && !(symbol_signal || number_signal)) begin
+            // end
+            // else if(~valid_iteration && !(symbol_signal || number_signal)) begin
             //     last_clock_keyrx <= 0;
             // end
         end
-    assign disp_num = (curr_sta == LOADING_OP_1) ? operand1 : ((curr_sta == LOADING_OP_0) ? operand0 : 0);
     // assign disp_num = (curr_sta == LOADING_OP_1) ? operand1 : ((curr_sta == LOADING_OP_0) ? operand0 : result);
     // assign disp_num[31:16] = operand1;
     // assign disp_num[15:0] = operand0;
@@ -329,8 +325,16 @@ module fsm #(
     // assign led5 = operand1_sign;
 endmodule
 
+/* código para borrar */
+// case (curr_sta)
+//     LOADING_OP_0: operand0 = {0, 0, 0, 0, operand0[4*DIGIT_NUM-1:4]};
+//     LOADING_OP_1: operand1 = {0, 0, 0, 0, operand1[4*DIGIT_NUM-1:4]};
+// endcase
 
-/*
-Código para el punto decimal
-*/
-operand0_dped <= 1;
+// if (curr_sta == LOADING_OP_0 || curr_sta == LOADING_OP_1) begin
+//     operand0 <= 0;
+//     operand0_sign <= 0;
+//     operand1 <= 0;
+//     operand1_sign <= 0;
+//     next_sta <= LOADING_OP_0;
+// end
