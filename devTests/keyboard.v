@@ -22,24 +22,25 @@
 //{{ Section below this comment is automatically maintained
 //   and may be overwritten
 //{module {keyboard}}
-module keyboard (	
-	input wire clock,		  
-	input wire reset,					
-	input wire [1:0] row_result,
-	input wire valid_out,
-	input wire symbol_signal,
-	input wire number_signal,
-	input wire enable,
-	output reg keytype,	 
-	output reg [3:0] key,
-	output reg [1:0] col_selector,
-	output reg valid_iteration
+module keyboard (
+    input wire clock,
+    input wire reset,
+    input wire [1:0] row_result,
+    input wire valid_out,
+    input wire symbol_signal,
+    input wire number_signal,
+    input wire enable,
+    output reg keytype,
+    output reg [3:0] key,
+    output reg [1:0] col_selector,
+    output reg valid_iteration
 );
-												
-reg [1:0] acthi_col_selector;
-reg row_detected;
 
-parameter [3:0]
+    reg [1:0] acthi_col_selector;
+    reg row_detected;
+    reg valid_iteration_flag;
+
+    parameter [3:0]
 	ZERO_VAL = 4'd0,
 	ONE_VAL = 4'd1,
 	TWO_VAL = 4'd2,
@@ -57,8 +58,8 @@ parameter [3:0]
 	D_VAL = 4'hD,
 	NUMERAL_VAL = 4'hE,
 	ASTERISK_VAL = 4'hF;
-	
-parameter [1:0]
+
+    parameter [1:0]
 	ONE_ROW = 2'b11,
 	TWO_ROW = 2'b11,
 	THREE_ROW = 2'b11,
@@ -80,56 +81,64 @@ parameter [1:0]
 	D_ROW = 2'b00;
 
 
-always @ (posedge clock)
-	// if(!reset) begin
-	// 	acthi_col_selector <= 2'b00;
-	// 	keytype <= 0;
-	// 	key <= 0;
-	// end
-	// else
-	acthi_col_selector <= acthi_col_selector + 1; // rota columnas
-	if(acthi_col_selector <= 2'b00) valid_iteration <= 0;
-	
-always @ (negedge clock)
-	if(reset) begin
-		if(valid_out) begin
-			valid_iteration <= 1;
-			case(acthi_col_selector)
-				2'b00:
-					case(row_result)
-						A_ROW: key <= A_VAL;
-						B_ROW: key <= B_VAL;
-						C_ROW: key <= C_VAL;
-						D_ROW: key <= D_VAL;
-					endcase
-						
-				2'b01:
-					case(row_result)
-						THREE_ROW: key <= THREE_VAL;
-						SIX_ROW: key <= SIX_VAL;
-						NINE_ROW: key <= NINE_VAL;
-						NUMERAL_ROW: key <= NUMERAL_VAL;
-					endcase
+    always @(posedge clock) begin
+        // if(!reset) begin
+        // 	acthi_col_selector <= 2'b00;
+        // 	keytype <= 0;
+        // 	key <= 0;
+        //     valid_iteration_flag <= 0;
+        //     valid_iteration <= 0;
+        // end else begin
+            if (acthi_col_selector == 2'b00) begin
+                valid_iteration <= valid_iteration_flag;
+                valid_iteration_flag <= 0;
+            end
+            if (valid_out) begin
+                valid_iteration_flag <= 1;
+                case (acthi_col_selector)
+                    2'b00:
+                    case (row_result)
+                        A_ROW: key <= A_VAL;
+                        B_ROW: key <= B_VAL;
+                        C_ROW: key <= C_VAL;
+                        D_ROW: key <= D_VAL;
+                    endcase
 
-				2'b10:
-					case(row_result)
-						TWO_ROW: key <= TWO_VAL;
-						FIVE_ROW: key <= FIVE_VAL;
-						EIGHT_ROW: key <= EIGHT_VAL;
-						ZERO_ROW: key <= ZERO_VAL;
-					endcase
+                    2'b01:
+                    case (row_result)
+                        THREE_ROW: key <= THREE_VAL;
+                        SIX_ROW: key <= SIX_VAL;
+                        NINE_ROW: key <= NINE_VAL;
+                        NUMERAL_ROW: key <= NUMERAL_VAL;
+                    endcase
+        
+                    2'b10:
+                    case (row_result)
+                        TWO_ROW:   key <= TWO_VAL;
+                        FIVE_ROW:  key <= FIVE_VAL;
+                        EIGHT_ROW: key <= EIGHT_VAL;
+                        ZERO_ROW:  key <= ZERO_VAL;
+                    endcase
 
-				2'b11:
-					case(row_result)
-						ONE_ROW: key <= ONE_VAL;
-						FOUR_ROW: key <= FOUR_VAL;
-						SEVEN_ROW: key <= SEVEN_VAL;
-						ASTERISK_ROW: key <= ASTERISK_VAL;
-					endcase
-			endcase
-		end
-	end
+                    2'b11:
+                    case (row_result)
+                        ONE_ROW: key <= ONE_VAL;
+                        FOUR_ROW: key <= FOUR_VAL;
+                        SEVEN_ROW: key <= SEVEN_VAL;
+                        ASTERISK_ROW: key <= ASTERISK_VAL;
+                    endcase
+                endcase
+            end
 
-assign keytype = key <= NINE_VAL;
-assign col_selector = ~acthi_col_selector;
+            acthi_col_selector = acthi_col_selector + 1;  // rota columnas
+        // end
+    end
+
+    // always @(negedge clock)
+    //     if (reset) begin
+            
+    //     end
+
+    assign keytype = key <= NINE_VAL;
+    assign col_selector = ~acthi_col_selector;
 endmodule

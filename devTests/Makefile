@@ -26,7 +26,7 @@ ifeq ($(uname_S), Darwin)
 	OSSCAD_ICE40_PREDEFMODULES = "$(APIOPKGFOLDER)/packages/tools-oss-cad-suite/share/yosys/ice40/cells_sim.v"
 endif
 
-LIB_SRC = fsm.v keyboard.v display.v Max7219.v spi_master.v counter.v alu.v Clock_Divider.v #FourBitAdder.v FullAdder.v BCDSubtractor.v BCDAdder.v BCD_Word_Adder.v BCD_Word_Subtractor.v 
+LIB_SRC = fsm.v keyboard.v display.v Max7219.v spi_master.v counter.v alu.v Clock_Divider.v #zero_detect.v #FourBitAdder.v FullAdder.v BCDSubtractor.v BCDAdder.v BCD_Word_Adder.v BCD_Word_Subtractor.v 
 SOURCES = calc.v $(LIB_SRC)
 TBNAME = calc_tb
 MODULE_TO_DRAW = calc.v

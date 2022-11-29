@@ -66,17 +66,31 @@ module display (
     localparam R = 8'h05;
     localparam H = 8'h37;
     localparam L = 8'h0E;
+    localparam BCD_MINUS = 4'ha;
 
     reg [3:0] curr_intensity, next_intensity;
+    reg [3:0] curr_brightness;
     reg [7:0] curr_decode, next_decode;
     reg [31:0] curr_bcd_buffer, next_bcd_buffer;
     reg [63:0] curr_no_bcd_buffer, next_no_bcd_buffer;
     reg [3:0] curr_dig_index = 1'h0, next_dig_index = 1'h0;
 
+    // reg [31:0] num_filtered;
+    // reg filtering = 1'h0;
+
+    // integer i;
+
     always @(posedge clock) begin
         max_start = 1'h0;
         add = 8'h00;
         data = 8'h00;
+
+    //     for(i = 0; i < 8; i = i + 1) begin
+    //     if(num_filtered[(31 - 4*i):(28 - 4*i)] == 1'h0) begin
+    //         num_filtered[(31 - 4*i):(28 - 4*i)] = BCD_BLANK;
+    //     end 
+    //     else i = 8;
+    // end
 
         case (curr_state)
             STATE_IDLE: begin
@@ -87,34 +101,34 @@ module display (
                 if (started != 1'h1) begin
                     next_state = STATE_TURN_ON;
                 end else begin
-                    if(mode != 1'h1) begin
-                        if(curr_decode == NO_DECODE) begin
-                            next_decode = DECODE;
-                            next_state = STATE_SET_DECODE;
-                        end else begin 
-                            next_bcd_buffer = num;
-                            next_state = STATE_WRITE_BCD;
-                        end
-                    end else if(mode == 1) begin
-                        if(curr_decode == DECODE) begin
-                            next_decode = NO_DECODE;
-                            next_state = STATE_SET_DECODE;
-                        end else begin 
-                            case (code)
-                                CODE_HOLAHOLA: begin
-                                    next_no_bcd_buffer = {H,O,L,A,H,O,L,A};
-                                    next_state = STATE_WRITE_NO_BCD;
-                                end
-                            endcase
-                            
-                        end
-                    end
-                    if (next_intensity != curr_intensity) begin
-                        next_state = STATE_SET_INT;
-                    end
-                    
+                    next_bcd_buffer = num;
+                    next_state = STATE_WRITE_BCD;
                 end
-
+                    // if(mode != 1'h1) begin
+                    //     if(curr_decode == NO_DECODE) begin
+                    //         next_decode = DECODE;
+                    //         next_state = STATE_SET_DECODE;
+                    //     end else begin 
+                    //         next_bcd_buffer = num;
+                    //         next_state = STATE_WRITE_BCD;
+                    //     end
+                    // end else if(mode == 1) begin
+                    //     if(curr_decode == DECODE) begin
+                    //         next_decode = NO_DECODE;
+                    //         next_state = STATE_SET_DECODE;
+                    //     end else begin 
+                    //         case (code)
+                    //             CODE_HOLAHOLA: begin
+                    //                 next_no_bcd_buffer = {H,O,L,A,H,O,L,A};
+                    //                 next_state = STATE_WRITE_NO_BCD;
+                    //             end
+                    //         endcase
+                    //     end
+                    // end
+                    // if (next_intensity != curr_intensity) begin
+                    //     next_state = STATE_SET_INT;
+                    // end
+                     
             end
             STATE_TURN_ON: begin
                 max_start = 1'h1;
@@ -149,11 +163,12 @@ module display (
             STATE_SET_INT: begin
                 max_start = 1'h1;
                 add = 8'h0a;
-                data = curr_intensity;
+                data = (started != 1'h1) ? 8'h03 : brightness;
                 if (max_busy != 1'h1) begin
                     if (started != 1'h1) begin
                         check_started = 1'h1;
-                        next_bcd_buffer = 8'h0;
+                        // next_bcd_buffer = 32'h00000000;
+                        next_bcd_buffer = 32'hffffffff;
                         next_state = STATE_WRITE_BCD;
                     end else begin
                         next_state = STATE_IDLE;
@@ -172,13 +187,15 @@ module display (
                 if (curr_dig_index < 4'h8) begin
                     max_start = 1'h1;
                     add = curr_dig_index + 1'h1;
-                    data = curr_bcd_buffer[(curr_dig_index)*4+3:(curr_dig_index)*4];
+                    data = curr_bcd_buffer[(curr_dig_index)*4+3:(curr_dig_index)*4] | ((curr_dig_index == dp) ? (8'h80) : 8'h00);
+
+                    
                     if (max_busy != 1'h1) begin
                         next_dig_index = curr_dig_index + 1'h1;
                     end
                 end else begin
                     next_dig_index = 1'h0;
-                    next_state = STATE_IDLE;
+                    next_state = STATE_SET_INT;
                 end
             end
             STATE_WRITE_NO_BCD: begin
@@ -223,13 +240,9 @@ module display (
             curr_decode <= next_decode;
             started <= check_started;
 
-            // counter <= counter + 1;
 
         end
     end
 
-    assign next_intensity = brightness;
 
-    // assign led_D5 = started;
-
-endmodule  // display
+endmodule  // display            // counter <= counter + 1;

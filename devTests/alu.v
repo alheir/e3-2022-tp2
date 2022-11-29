@@ -46,34 +46,56 @@ module alu #(
     output wire [2:0] result_dp
 );
 
-    wire [23:0] bin0;
-    wire [23:0] bin1;
+    wire [27:0] bin0;
+    wire [27:0] bin1;
     reg [24:0] res;
-    wire [24:0] prod_res;
     // wire [24:0] bin0_signed = (operand0_sign ? -bin0 : bin0) / (10 ** operand0_dp);
     // wire [24:0] bin1_signed = (operand1_sign ? -bin1 : bin1) / (10 ** operand1_dp);
     wire [15:0] bin0_signed = (operand0_sign ? -bin0 : bin0);
     wire [15:0] bin1_signed = (operand1_sign ? -bin1 : bin1);
 
-    bcd2bin operand1_i (
+    wire [15:0] bin0_dpcompat;
+    wire [15:0] bin1_dpcompat;
+    wire [2:0] maxdp = operand0_dp > operand1_dp ? operand0_dp : operand1_dp;
+
+    bcd2bin operand0_i (
         .num(operand0),
         .bin(bin0)
     );
-    bcd2bin operand2_i (
+    bcd2bin operand1_i (
         .num(operand1),
         .bin(bin1)
     );
+    // bcd2bin operand0_i_compat (
+    //     .num(operand0 << 4*(maxdp - operand0_dp)),
+    //     .bin(bin0_dpcompat)
+    // );
+    // bcd2bin operand1_i_compat (
+    //     .num(operand1 << 4*(maxdp - operand1_dp)),
+    //     .bin(bin1_dpcompat)
+    // );
+
+    // wire [15:0] bin0_signed_dpcompat = (operand0_sign ? -bin0_dpcompat : bin0_dpcompat);
+    // wire [15:0] bin1_signed_dpcompat = (operand1_sign ? -bin1_dpcompat : bin1_dpcompat);
 
     always @(operand0, operand0_sign, operand1, operand1_sign, operation) begin
         case (operation)
             0: begin
-                res = ((4'd10 ** operand1_dp) * bin0_signed + (4'd10 ** operand0_dp) * bin1_signed);
-                result_dp = operand0_dp + operand1_dp;
+                res = bin0_signed + bin1_signed;
+                result_dp = operand0_dp;
             end
             1: begin
-                res = ((4'd10 ** operand1_dp) * bin0_signed - (4'd10 ** operand0_dp) * bin1_signed);
-                result_dp = operand0_dp + operand1_dp;
+                res = bin0_signed - bin1_signed;
+                result_dp = operand0_dp;
             end
+            // 0: begin
+            //     res = bin0_signed_dpcompat + bin1_signed_dpcompat;
+            //     result_dp = maxdp;
+            // end
+            // 1: begin
+            //     res = bin0_signed_dpcompat - bin1_signed_dpcompat;
+            //     result_dp = maxdp;
+            // end
             2: begin
                 res = bin0_signed * bin1_signed;
                 result_dp = operand0_dp + operand1_dp;
@@ -82,7 +104,7 @@ module alu #(
                 if (bin1_signed != 0) res = bin0_signed / bin1_signed;
                 else res = 32'd99999999;
             end
-            4: res = bin0_signed ** bin1_signed;
+            // 4: res = bin0_signed ** bin1_signed;
             default: res = 0;
         endcase
     end

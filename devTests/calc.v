@@ -23,7 +23,7 @@
 //   and may be overwritten
 //{module {calc}}
 module calc #(
-    parameter CLK_DIV = 8
+    parameter CLK_DIV = 4
 ) (
     input wire pin_kb_Q0,    //Q0
     input wire pin_kb_Q1,    //Q1
@@ -64,31 +64,37 @@ module calc #(
     wire sw5;
 
     // Clock settings
-    wire __clock, clock;
+    wire clock_slow, clock_fast, clock_slower;
     SB_HFOSC #(
         .CLKHF_DIV("0b11")  // 6 MHz = ~48 MHz / 8 (0b00=1, 0b01=2, 0b10=4, 0b11=8)
     ) hf_osc (
         .CLKHFPU(1'b1),
         .CLKHFEN(1'b1),
-        .CLKHF  (__clock)
+        .CLKHF  (clock_fast)
     );
+    // Clock_divider clocky (
+    //     .clock_in (__clock),
+    //     .clock_out(clock),    // 6MHz / c
+    //     .clk_div  (CLK_DIV)
+    // );
+    SB_LFOSC intlosc (
+        .CLKLFEN(1'b1),
+        .CLKLFPU(1'b1),
+        .CLKLF  (clock_slow)
+    )  /* synthesis ROUTE_THROUGH_FABRIC = [0] */;
+
     Clock_divider clocky (
-        .clock_in (__clock),
-        .clock_out(clock),    // 6MHz / 4 = 1.5MHz
+        .clock_in (clock_slow),
+        .clock_out(clock_slower),  // 6MHz / c
         .clk_div  (CLK_DIV)
     );
-    // SB_LFOSC intlosc (
-    //     .CLKLFEN(1'b1),
-    //     .CLKLFPU(1'b1),
-    //     .CLKLF  (clock)
-    // )  /* synthesis ROUTE_THROUGH_FABRIC = [0] */;
-
     wire enable;
     assign enable = 0;
 
     fsm calcFsm (
-        .clock(clock),
-        .reset(pin_reset), //pin_reset),
+        .clock_fast(clock_fast),
+        .clock_slow(clock_slower),
+        .reset(pin_reset),  //pin_reset),
 
         .row_result({pin_kb_Q1, pin_kb_Q0}),
         .valid_out(pin_kb_OUT),
